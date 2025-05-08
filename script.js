@@ -138,27 +138,96 @@ window.addEventListener('scroll', animateOnScroll);
 // Initial animations
 animateOnScroll();
 
-// Initialize lightGallery
-lightGallery(document.querySelector('.portfolio-grid'), {
-    selector: '.view-project',
-    videojs: true,
-    youtube: {
-        enablejsapi: true,
-        modestbranding: true,
-        showinfo: false,
-        rel: false
-    },
-    vimeo: {
-        byline: false,
-        portrait: false,
-        title: false
-    },
-    plugins: [lgVideo],
-    speed: 600,
-    download: false,
-    counter: false,
-    share: false,
-    closable: true
+// Video modal functionality
+const videoModal = document.createElement('div');
+videoModal.className = 'video-modal';
+videoModal.innerHTML = `
+    <div class="video-wrapper">
+        <button class="close-modal"><i class="fas fa-times"></i></button>
+        <div class="video-container">
+            <div class="video-placeholder">
+                <div class="video-loading">
+                    <div class="spinner"></div>
+                    <p>Loading video...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
+document.body.appendChild(videoModal);
+
+// Handle video playback
+const handleVideoPlayback = () => {
+    const videoButtons = document.querySelectorAll('.view-project');
+    
+    videoButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Get video URL directly
+            const videoUrl = button.getAttribute('data-video-url');
+            
+            if (!videoUrl) {
+                console.error('No video URL found');
+                return;
+            }
+
+            // Show modal
+            videoModal.classList.add('active');
+
+            // Create iframe after modal is shown
+            const videoContainer = videoModal.querySelector('.video-container');
+            const iframe = document.createElement('iframe');
+            iframe.src = videoUrl;
+            iframe.frameBorder = '0';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            
+            // Remove loading placeholder and add iframe
+            videoContainer.innerHTML = '';
+            videoContainer.appendChild(iframe);
+
+            // Close modal functionality
+            const closeBtn = videoModal.querySelector('.close-modal');
+            const closeModal = () => {
+                // Remove iframe to prevent memory leaks
+                videoContainer.innerHTML = '';
+                videoModal.classList.remove('active');
+            };
+
+            closeBtn.addEventListener('click', closeModal);
+            videoModal.addEventListener('click', (e) => {
+                if (e.target === videoModal) closeModal();
+            });
+
+            // Prevent scrolling
+            document.body.style.overflow = 'hidden';
+
+            // Restore scrolling when closed
+            videoModal.addEventListener('transitionend', () => {
+                if (!videoModal.classList.contains('active')) {
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+    });
+};
+
+// Initialize video playback
+document.addEventListener('DOMContentLoaded', function() {
+    handleVideoPlayback();
+    
+    // Add event listener for hash changes
+    window.addEventListener('hashchange', function() {
+        const hash = window.location.hash;
+        if (hash.startsWith('#video-')) {
+            const videoId = hash.replace('#video-', '');
+            const button = document.querySelector(`[data-video-id="${videoId}"]`);
+            if (button) {
+                button.click();
+            }
+        }
+    });
 });
 
 // Add animation on scroll
