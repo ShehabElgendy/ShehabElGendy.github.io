@@ -1,5 +1,9 @@
 // Initialize event listeners when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
+    // Add fade-in class to all section headings
+    document.querySelectorAll('section h2').forEach(heading => {
+        heading.classList.add('fade-in');
+    });
     // Handle smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -143,11 +147,12 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(img);
     });
 
-    // Handle portfolio item animations
-    const animatePortfolioItems = () => {
-        const items = document.querySelectorAll('.portfolio-item');
+    // Handle animations for elements on scroll
+    const animateOnScroll = () => {
+        // Animate portfolio items
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
         
-        items.forEach(item => {
+        portfolioItems.forEach(item => {
             const elementTop = item.getBoundingClientRect().top;
             const elementBottom = item.getBoundingClientRect().bottom;
             
@@ -155,13 +160,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.classList.add('visible');
             }
         });
+
+        // Animate all section headings
+        const sectionHeadings = document.querySelectorAll('section h2');
+        
+        sectionHeadings.forEach(heading => {
+            const elementTop = heading.getBoundingClientRect().top;
+            const elementBottom = heading.getBoundingClientRect().bottom;
+            
+            if (elementTop < window.innerHeight - 100 && elementBottom > 0) {
+                heading.classList.add('fade-in-visible');
+            } else {
+                heading.classList.remove('fade-in-visible');
+            }
+        });
     };
 
     // Add scroll event listener for animations
-    window.addEventListener('scroll', animatePortfolioItems);
+    window.addEventListener('scroll', animateOnScroll);
 
     // Initialize animations
-    animatePortfolioItems();
+    animateOnScroll();
 
     // Form submission handling
     const contactForm = document.getElementById('contact-form');
