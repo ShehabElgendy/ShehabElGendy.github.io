@@ -116,17 +116,24 @@ body {
     width: 100%;
 }
 
-/* Animation Classes - Enhanced for smoother transitions */
+/* Animation Classes - Enhanced with exit animations */
 .animate {
     opacity: 0;
     transition: all 0.8s ease;
 }
 
-/* Fade in animation - smoother and more pronounced */
+/* Base class for all animated elements */
+.fade-in, .slide-in-left, .slide-in-right, .scale-in, .rotate-in {
+    transition-duration: 0.6s;
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    will-change: opacity, transform;
+}
+
+/* Fade in/out animation */
 .fade-in {
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .fade-in.appear {
@@ -134,11 +141,17 @@ body {
     transform: translateY(0);
 }
 
-/* Slide in from left animation - more dynamic */
+.fade-in.exit {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.4s ease, transform 0.4s ease-in;
+}
+
+/* Slide in/out from left animation */
 .slide-in-left {
     opacity: 0;
     transform: translateX(-70px);
-    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .slide-in-left.appear {
@@ -146,11 +159,17 @@ body {
     transform: translateX(0);
 }
 
-/* Slide in from right animation - more dynamic */
+.slide-in-left.exit {
+    opacity: 0;
+    transform: translateX(-70px);
+    transition: opacity 0.4s ease, transform 0.4s ease-in;
+}
+
+/* Slide in/out from right animation */
 .slide-in-right {
     opacity: 0;
     transform: translateX(70px);
-    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .slide-in-right.appear {
@@ -158,11 +177,17 @@ body {
     transform: translateX(0);
 }
 
-/* Scale in animation - more bouncy */
+.slide-in-right.exit {
+    opacity: 0;
+    transform: translateX(70px);
+    transition: opacity 0.4s ease, transform 0.4s ease-in;
+}
+
+/* Scale in/out animation */
 .scale-in {
     opacity: 0;
     transform: scale(0.7);
-    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .scale-in.appear {
@@ -170,16 +195,28 @@ body {
     transform: scale(1);
 }
 
-/* Rotate in animation - more dramatic */
+.scale-in.exit {
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.4s ease, transform 0.4s ease-in;
+}
+
+/* Rotate in/out animation */
 .rotate-in {
     opacity: 0;
     transform: rotate(-15deg) scale(0.8);
-    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .rotate-in.appear {
     opacity: 1;
     transform: rotate(0) scale(1);
+}
+
+.rotate-in.exit {
+    opacity: 0;
+    transform: rotate(-15deg) scale(0.8);
+    transition: opacity 0.4s ease, transform 0.4s ease-in;
 }
 
 /* Delay classes - slightly longer for more pronounced sequence */

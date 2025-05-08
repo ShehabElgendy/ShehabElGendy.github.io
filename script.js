@@ -291,15 +291,32 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
-        // Create the Intersection Observer that allows replay
+        // Create the Intersection Observer with exit animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 // When element enters viewport
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('appear');
+                    // Remove exit class if it exists
+                    entry.target.classList.remove('exit');
+                    // Add appear class with a small delay to ensure smooth transition
+                    setTimeout(() => {
+                        entry.target.classList.add('appear');
+                    }, 50);
                 } else {
-                    // When element leaves viewport - prepare for replay
-                    entry.target.classList.remove('appear');
+                    // When element leaves viewport - add exit animation
+                    if (entry.target.classList.contains('appear')) {
+                        // Add exit class
+                        entry.target.classList.add('exit');
+                        
+                        // Remove appear class after exit animation completes
+                        setTimeout(() => {
+                            entry.target.classList.remove('appear');
+                            // After a bit more time, remove exit class to prepare for next entrance
+                            setTimeout(() => {
+                                entry.target.classList.remove('exit');
+                            }, 500);
+                        }, 400); // Match this to the exit animation duration in CSS
+                    }
                 }
             });
         }, {
