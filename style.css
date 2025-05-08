@@ -35,11 +35,11 @@ body {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(10, 25, 47, 0.95); /* Darker background for better contrast */
+    background: rgba(10, 25, 47, 0.4); /* Matching hero background transparency */
     padding: 1.2rem 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(3px); /* Matching hero backdrop filter */
 }
 
 .nav-content {
@@ -62,12 +62,14 @@ body {
     font-size: 1.8rem;
     font-weight: 700;
     letter-spacing: 0.5px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .subtitle {
     font-size: 0.85rem;
-    color: #ccd6f6; /* Lighter color for better visibility */
+    color: #ffffff; /* Brighter color for better visibility */
     opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .nav-links {
@@ -78,12 +80,13 @@ body {
 
 .nav-links a {
     text-decoration: none;
-    color: #ccd6f6; /* Lighter color for better contrast */
-    font-weight: 500;
+    color: #ffffff; /* Brighter color for better contrast */
+    font-weight: 600;
     font-size: 0.95rem;
     transition: all 0.3s ease;
     position: relative;
     padding: 0.5rem 0; /* Add padding for larger hit area */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .nav-links a:hover {
