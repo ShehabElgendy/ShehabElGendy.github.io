@@ -658,6 +658,16 @@ section h2.fade-in-visible {
     transform: translateY(0);
 }
 
+/* Remove underlines from skill category headings */
+.skill-category h3 {
+    position: relative;
+    border-bottom: none !important;
+}
+
+.skill-category h3::after {
+    display: none !important;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
