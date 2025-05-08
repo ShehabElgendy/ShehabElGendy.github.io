@@ -145,12 +145,7 @@ videoModal.innerHTML = `
     <div class="video-wrapper">
         <button class="close-modal"><i class="fas fa-times"></i></button>
         <div class="video-container">
-            <div class="video-placeholder">
-                <div class="video-loading">
-                    <div class="spinner"></div>
-                    <p>Loading video...</p>
-                </div>
-            </div>
+            <iframe src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </div>
 `;
@@ -164,7 +159,7 @@ const handleVideoPlayback = () => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
             
-            // Get video URL directly
+            // Get video URL
             const videoUrl = button.getAttribute('data-video-url');
             
             if (!videoUrl) {
@@ -175,24 +170,16 @@ const handleVideoPlayback = () => {
             // Show modal
             videoModal.classList.add('active');
 
-            // Create iframe after modal is shown
-            const videoContainer = videoModal.querySelector('.video-container');
-            const iframe = document.createElement('iframe');
+            // Update iframe source
+            const iframe = videoModal.querySelector('iframe');
             iframe.src = videoUrl;
-            iframe.frameBorder = '0';
-            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-            iframe.allowFullscreen = true;
-            
-            // Remove loading placeholder and add iframe
-            videoContainer.innerHTML = '';
-            videoContainer.appendChild(iframe);
 
             // Close modal functionality
             const closeBtn = videoModal.querySelector('.close-modal');
             const closeModal = () => {
-                // Remove iframe to prevent memory leaks
-                videoContainer.innerHTML = '';
+                iframe.src = '';
                 videoModal.classList.remove('active');
+                document.body.style.overflow = '';
             };
 
             closeBtn.addEventListener('click', closeModal);
@@ -202,6 +189,13 @@ const handleVideoPlayback = () => {
 
             // Prevent scrolling
             document.body.style.overflow = 'hidden';
+
+            // Add keyboard support
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
 
             // Restore scrolling when closed
             videoModal.addEventListener('transitionend', () => {
@@ -214,19 +208,18 @@ const handleVideoPlayback = () => {
 };
 
 // Initialize video playback
-document.addEventListener('DOMContentLoaded', function() {
-    handleVideoPlayback();
-    
-    // Add event listener for hash changes
-    window.addEventListener('hashchange', function() {
-        const hash = window.location.hash;
-        if (hash.startsWith('#video-')) {
-            const videoId = hash.replace('#video-', '');
-            const button = document.querySelector(`[data-video-id="${videoId}"]`);
-            if (button) {
-                button.click();
-            }
+document.addEventListener('DOMContentLoaded', handleVideoPlayback);
+
+// Add event listener for hash changes
+window.addEventListener('hashchange', function() {
+    const hash = window.location.hash;
+    if (hash.startsWith('#video-')) {
+        const videoId = hash.replace('#video-', '');
+        const button = document.querySelector(`[data-video-id="${videoId}"]`);
+        if (button) {
+            button.click();
         }
+    }
     });
 });
 
