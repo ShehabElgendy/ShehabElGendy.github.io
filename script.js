@@ -1,5 +1,32 @@
 // Initialize event listeners when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
+    // Mobile menu toggle
+    const navMenu = document.querySelector('.nav-links');
+    const hamburger = document.createElement('div');
+    hamburger.className = 'hamburger';
+    hamburger.innerHTML = '<span></span><span></span><span></span>';
+    document.querySelector('.nav-content').appendChild(hamburger);
+
+    hamburger.addEventListener('click', function() {
+        navMenu.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!navMenu.contains(event.target) && !hamburger.contains(event.target) && navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    });
+    
+    // Close mobile menu when clicking a nav link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function() {
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        });
+    });
     // Hero section slideshow
     const slideshowBackground = document.querySelector('.slideshow-background');
     if (slideshowBackground) {
