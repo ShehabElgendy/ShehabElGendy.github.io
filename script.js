@@ -1,278 +1,176 @@
-// Initialize lightGallery
-lightGallery(document.querySelector('.video-grid'), {
-    selector: '.video-item',
-    videojs: true,
-    youtube: {
-        enablejsapi: true,
-        modestbranding: true,
-        showinfo: false,
-        rel: false
-    },
-    vimeo: {
-        byline: false,
-        portrait: false,
-        title: false
-    },
-    plugins: [lgVideo]
-});
-
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
+// Initialize event listeners when the document is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
         });
     });
-});
 
-// Add active class to navigation links on scroll
-const navLinks = document.querySelectorAll('.nav-links a');
-const sections = document.querySelectorAll('section');
+    // Add active class to navigation links on scroll
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sections = document.querySelectorAll('section');
 
-window.addEventListener('scroll', () => {
-    let current = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (scrollY >= (sectionTop - sectionHeight / 3)) {
-            current = section.getAttribute('id');
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href').slice(1) === current) {
-            link.classList.add('active');
-        }
-    });
-});
-
-// Video showcase functionality
-const videoItems = document.querySelectorAll('.video-item');
-videoItems.forEach(item => {
-    const playIcon = item.querySelector('.play-icon');
-    const videoThumbnail = item.querySelector('.video-thumbnail img');
-    const videoId = item.getAttribute('data-video-id');
-    const videoType = item.getAttribute('data-video-type') || 'youtube';
-
-    playIcon.addEventListener('click', () => {
-        // Create video element
-        const videoElement = document.createElement('div');
-        videoElement.className = 'video-player';
+    window.addEventListener('scroll', () => {
+        let current = '';
         
-        if (videoType === 'youtube') {
-            videoElement.innerHTML = `
-                <iframe 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&showinfo=0&rel=0"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                ></iframe>
-            `;
-        } else if (videoType === 'google-drive') {
-            videoElement.innerHTML = `
-                <iframe 
-                    src="https://drive.google.com/file/d/${videoId}/preview"
-                    frameborder="0"
-                    allow="autoplay"
-                    allowfullscreen
-                ></iframe>
-            `;
-        }
-
-        // Add video player to the DOM
-        item.appendChild(videoElement);
-        
-        // Remove play icon and thumbnail
-        playIcon.style.display = 'none';
-        videoThumbnail.style.display = 'none';
-
-        // Add close button
-        const closeButton = document.createElement('button');
-        closeButton.className = 'close-video';
-        closeButton.innerHTML = '<i class="fas fa-times"></i>';
-        closeButton.addEventListener('click', () => {
-            videoElement.remove();
-            closeButton.remove();
-            playIcon.style.display = 'flex';
-            videoThumbnail.style.display = 'block';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (scrollY >= (sectionTop - sectionHeight / 3)) {
+                current = section.getAttribute('id');
+            }
         });
 
-        item.appendChild(closeButton);
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').slice(1) === current) {
+                link.classList.add('active');
+            }
+        });
     });
-});
 
-// Handle portfolio item animations
-const animatePortfolioItems = () => {
-    const items = document.querySelectorAll('.portfolio-item');
-    
-    items.forEach(item => {
-        const elementTop = item.getBoundingClientRect().top;
-        const elementBottom = item.getBoundingClientRect().bottom;
-        
-        if (elementTop < window.innerHeight && elementBottom > 0) {
-            item.classList.add('visible');
-        }
-    });
-};
-
-// Initialize scroll animations
-const animateOnScroll = () => {
-    const elements = document.querySelectorAll('.animate-on-scroll');
-    
-    elements.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-        const elementBottom = element.getBoundingClientRect().bottom;
-        
-        if (elementTop < window.innerHeight * 0.7 && elementBottom > 0) {
-            element.classList.add('visible');
-        }
-    });
-};
-
-// Add scroll event listener for animations
-window.addEventListener('scroll', animateOnScroll);
-
-// Initial animations
-animateOnScroll();
-
-// Video modal functionality
-const videoModal = document.createElement('div');
-videoModal.className = 'video-modal';
-videoModal.innerHTML = `
-    <div class="video-wrapper">
-        <button class="close-modal"><i class="fas fa-times"></i></button>
-        <div class="video-container">
-            <iframe src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-    </div>
-`;
-document.body.appendChild(videoModal);
-
-// Handle video playback
-const handleVideoPlayback = () => {
+    // Set up video playback for all 'Watch Demo' or similar buttons
     const videoButtons = document.querySelectorAll('.view-project');
     
     videoButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
+        button.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Get video URL
-            const videoUrl = button.getAttribute('data-video-url');
+            // Get the video URL from the data attribute
+            let videoUrl = this.getAttribute('data-video-url');
             
             if (!videoUrl) {
-                console.error('No video URL found');
+                console.error('No video URL found for this button');
                 return;
             }
-
-            // Show modal
-            videoModal.classList.add('active');
-
-            // Update iframe source
-            const iframe = videoModal.querySelector('iframe');
-            iframe.src = videoUrl;
-
-            // Close modal functionality
-            const closeBtn = videoModal.querySelector('.close-modal');
-            const closeModal = () => {
-                iframe.src = '';
-                videoModal.classList.remove('active');
-                document.body.style.overflow = '';
-            };
-
-            closeBtn.addEventListener('click', closeModal);
-            videoModal.addEventListener('click', (e) => {
-                if (e.target === videoModal) closeModal();
-            });
-
-            // Prevent scrolling
+            
+            console.log("Using video URL:", videoUrl); // Debug to check URL
+            
+            // Check if it's a Google Drive URL and convert to proper embed format if needed
+            if (videoUrl.includes('drive.google.com/file/d/')) {
+                // Extract the file ID
+                const fileIdMatch = videoUrl.match(/\/d\/([^\/]+)/);
+                if (fileIdMatch && fileIdMatch[1]) {
+                    const fileId = fileIdMatch[1];
+                    // Create the proper embed URL
+                    videoUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+                    console.log("Converted to Google Drive preview URL:", videoUrl); // Debug
+                }
+            }
+            
+            // Create the modal with the video
+            const videoModal = document.createElement('div');
+            videoModal.className = 'video-modal';
+            videoModal.style.position = 'fixed';
+            videoModal.style.top = '0';
+            videoModal.style.left = '0';
+            videoModal.style.width = '100%';
+            videoModal.style.height = '100%';
+            videoModal.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+            videoModal.style.display = 'flex';
+            videoModal.style.justifyContent = 'center';
+            videoModal.style.alignItems = 'center';
+            videoModal.style.zIndex = '1000';
+            
+            // Add the video wrapper and iframe
+            videoModal.innerHTML = `
+                <div class="video-wrapper" style="position: relative; width: 80%; max-width: 900px; background: #112240; border-radius: 8px; overflow: hidden;">
+                    <button class="close-modal" style="position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: #64ffda; border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-times" style="color: #0a192f;"></i>
+                    </button>
+                    <div class="video-container" style="padding-top: 56.25%; position: relative;">
+                        <iframe 
+                            src="${videoUrl}" 
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen
+                        ></iframe>
+                    </div>
+                </div>
+            `;
+            
+            // Add the modal to the document
+            document.body.appendChild(videoModal);
+            
+            // Prevent scrolling while modal is open
             document.body.style.overflow = 'hidden';
-
-            // Add keyboard support
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeModal();
+            
+            // Add close functionality
+            const closeBtn = videoModal.querySelector('.close-modal');
+            closeBtn.addEventListener('click', function() {
+                videoModal.remove();
+                document.body.style.overflow = '';
+            });
+            
+            // Also close when clicking outside the video
+            videoModal.addEventListener('click', function(e) {
+                if (e.target === videoModal) {
+                    videoModal.remove();
+                    document.body.style.overflow = '';
                 }
             });
-
-            // Restore scrolling when closed
-            videoModal.addEventListener('transitionend', () => {
-                if (!videoModal.classList.contains('active')) {
+            
+            // Add keyboard support to close with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.querySelector('.video-modal')) {
+                    videoModal.remove();
                     document.body.style.overflow = '';
                 }
             });
         });
     });
-};
 
-// Initialize video playback
-document.addEventListener('DOMContentLoaded', handleVideoPlayback);
-
-// Add event listener for hash changes
-window.addEventListener('hashchange', function() {
-    const hash = window.location.hash;
-    if (hash.startsWith('#video-')) {
-        const videoId = hash.replace('#video-', '');
-        const button = document.querySelector(`[data-video-id="${videoId}"]`);
-        if (button) {
-            button.click();
-        }
-    }
+    // Lazy loading for images
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    observer.unobserve(img);
+                }
+            }
+        });
     });
-});
 
-// Add animation on scroll
-const animateOnScroll = () => {
-    const elements = document.querySelectorAll('.portfolio-item');
-    
-    elements.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-        const elementBottom = element.getBoundingClientRect().bottom;
+    // Observe all images with data-src attribute
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        observer.observe(img);
+    });
+
+    // Handle portfolio item animations
+    const animatePortfolioItems = () => {
+        const items = document.querySelectorAll('.portfolio-item');
         
-        if (elementTop < window.innerHeight * 0.7 && elementBottom > 0) {
-            element.classList.add('animate');
-        }
-    });
-};
+        items.forEach(item => {
+            const elementTop = item.getBoundingClientRect().top;
+            const elementBottom = item.getBoundingClientRect().bottom;
+            
+            if (elementTop < window.innerHeight && elementBottom > 0) {
+                item.classList.add('visible');
+            }
+        });
+    };
 
-// Add scroll event listener for animations
-window.addEventListener('scroll', animateOnScroll);
+    // Add scroll event listener for animations
+    window.addEventListener('scroll', animatePortfolioItems);
 
-// Initial animations
-animateOnScroll();
-
-// Form submission handling
-const contactForm = document.getElementById('contact-form');
-if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        // Here you would typically send the form data to a server
-        alert('Thank you for your message! I will get back to you soon.');
-        this.reset();
-    });
-}
-
-// Intersection Observer for lazy loading
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.src = entry.target.dataset.src;
-            observer.unobserve(entry.target);
-        }
-    });
-});
-
-// Observe all images with data-src attribute
-document.querySelectorAll('img[data-src]').forEach(img => {
-    observer.observe(img);
-});
-
-// Add scroll event listener for animations
-window.addEventListener('scroll', () => {
+    // Initialize animations
     animatePortfolioItems();
-});
 
-// Initial animations
-animatePortfolioItems();
+    // Form submission handling
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Here you would typically send the form data to a server
+            alert('Thank you for your message! I will get back to you soon.');
+            this.reset();
+        });
+    }
+});
