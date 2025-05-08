@@ -237,40 +237,96 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(img);
     });
 
-    // Handle animations for elements on scroll
-    const animateOnScroll = () => {
-        // Animate portfolio items
-        const portfolioItems = document.querySelectorAll('.portfolio-item');
-        
-        portfolioItems.forEach(item => {
-            const elementTop = item.getBoundingClientRect().top;
-            const elementBottom = item.getBoundingClientRect().bottom;
+    // Super enhanced animations with replay functionality
+    const setupSuperAnimations = () => {
+        // Animation classes to apply - much more comprehensive
+        const animations = {
+            // Section titles with different animations
+            'section h2': 'scale-in',
+            '.section-title': 'scale-in',
             
-            if (elementTop < window.innerHeight && elementBottom > 0) {
-                item.classList.add('visible');
-            }
-        });
-
-        // Animate all section headings
-        const sectionHeadings = document.querySelectorAll('section h2');
-        
-        sectionHeadings.forEach(heading => {
-            const elementTop = heading.getBoundingClientRect().top;
-            const elementBottom = heading.getBoundingClientRect().bottom;
+            // Portfolio items with alternating animations
+            '.portfolio-item:nth-child(4n+1)': 'slide-in-left',
+            '.portfolio-item:nth-child(4n+2)': 'slide-in-right',
+            '.portfolio-item:nth-child(4n+3)': 'scale-in',
+            '.portfolio-item:nth-child(4n+4)': 'rotate-in',
             
-            if (elementTop < window.innerHeight - 100 && elementBottom > 0) {
-                heading.classList.add('fade-in-visible');
-            } else {
-                heading.classList.remove('fade-in-visible');
-            }
+            // Hero section elements
+            '.hero h1': 'slide-in-left',
+            '.hero p': 'slide-in-right',
+            '.hero .cta-button': 'scale-in',
+            
+            // All other content elements
+            '.video-description': 'fade-in',
+            '.about-content': 'fade-in',
+            '.about-image': 'rotate-in',
+            '.skill-card': 'scale-in',
+            '.contact-form': 'fade-in',
+            '.nav-links li': 'fade-in',
+            'footer p': 'fade-in',
+            '.social-links a': 'scale-in',
+            '.portfolio-grid': 'fade-in',
+            '.video-thumbnail': 'scale-in',
+            '.portfolio-link': 'scale-in',
+            '.view-project': 'scale-in'
+        };
+        
+        // Apply animation classes to elements
+        Object.entries(animations).forEach(([selector, animationClass]) => {
+            document.querySelectorAll(selector).forEach((element, index) => {
+                // Skip if element already has an animation class
+                if (!element.classList.contains('fade-in') && 
+                    !element.classList.contains('slide-in-left') && 
+                    !element.classList.contains('slide-in-right') && 
+                    !element.classList.contains('scale-in') && 
+                    !element.classList.contains('rotate-in')) {
+                    
+                    element.classList.add(animationClass);
+                    
+                    // Add sequential delays for elements of the same type
+                    if (index < 5) { // Only apply delays to first 5 elements
+                        element.classList.add(`delay-${index + 1}`);
+                    }
+                }
+            });
         });
+        
+        // Create the Intersection Observer that allows replay
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                // When element enters viewport
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('appear');
+                } else {
+                    // When element leaves viewport - prepare for replay
+                    entry.target.classList.remove('appear');
+                }
+            });
+        }, {
+            threshold: 0.15, // Trigger when 15% of the element is visible
+            rootMargin: '0px 0px -50px 0px' // Trigger slightly before element comes into view
+        });
+        
+        // Observe all elements with animation classes
+        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in, .rotate-in').forEach(element => {
+            observer.observe(element);
+        });
+        
+        // Immediately trigger animations for elements in the viewport on load
+        setTimeout(() => {
+            document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in, .rotate-in').forEach(element => {
+                const position = element.getBoundingClientRect();
+                if (position.top < window.innerHeight && position.bottom >= 0) {
+                    element.classList.add('appear');
+                }
+            });
+        }, 300);
     };
+    
+    // Initialize super animations
+    setupSuperAnimations();
 
-    // Add scroll event listener for animations
-    window.addEventListener('scroll', animateOnScroll);
-
-    // Initialize animations
-    animateOnScroll();
+    // No need for scroll listener as we're using Intersection Observer
 
     // Form submission handling
     const contactForm = document.getElementById('contact-form');

@@ -116,6 +116,93 @@ body {
     width: 100%;
 }
 
+/* Animation Classes - Enhanced for smoother transitions */
+.animate {
+    opacity: 0;
+    transition: all 0.8s ease;
+}
+
+/* Fade in animation - smoother and more pronounced */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fade-in.appear {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Slide in from left animation - more dynamic */
+.slide-in-left {
+    opacity: 0;
+    transform: translateX(-70px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.slide-in-left.appear {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Slide in from right animation - more dynamic */
+.slide-in-right {
+    opacity: 0;
+    transform: translateX(70px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.slide-in-right.appear {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Scale in animation - more bouncy */
+.scale-in {
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.scale-in.appear {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Rotate in animation - more dramatic */
+.rotate-in {
+    opacity: 0;
+    transform: rotate(-15deg) scale(0.8);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.rotate-in.appear {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+}
+
+/* Delay classes - slightly longer for more pronounced sequence */
+.delay-1 {
+    transition-delay: 0.1s;
+}
+
+.delay-2 {
+    transition-delay: 0.2s;
+}
+
+.delay-3 {
+    transition-delay: 0.3s;
+}
+
+.delay-4 {
+    transition-delay: 0.5s;
+}
+
+.delay-5 {
+    transition-delay: 0.7s;
+}
+
 /* Hero Section */
 .hero {
     height: 100vh;
@@ -473,14 +560,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
+    opacity: 0 !important; /* Force it to be invisible by default */
     transition: opacity 0.3s ease;
     pointer-events: none; /* Allow clicks to pass through when invisible */
+    z-index: 5; /* Ensure it's above the image but below other elements */
 }
 
 /* Show overlay on hover */
 .portfolio-item:hover .play-overlay {
-    opacity: 1;
+    opacity: 1 !important; /* Force it to be visible on hover */
     pointer-events: auto; /* Enable clicks when visible */
 }
 
