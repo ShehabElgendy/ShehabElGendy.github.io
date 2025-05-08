@@ -382,8 +382,9 @@ body {
     padding: 0 2rem;
 }
 
+/* Updated Portfolio Item Styles */
 .portfolio-item {
-    background: #112240; /* Slightly lighter bg for cards */
+    background: #112240;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
@@ -391,6 +392,7 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
+    margin-bottom: 2.5rem;
 }
 
 .portfolio-item:hover {
@@ -398,23 +400,96 @@ body {
     box-shadow: 0 20px 30px -15px rgba(2, 12, 27, 0.7);
 }
 
-.portfolio-image {
+.video-thumbnail {
     position: relative;
-    height: 230px; /* Consistent height */
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
     overflow: hidden;
 }
 
-.portfolio-image img {
+.video-thumbnail img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.portfolio-item:hover .portfolio-image img {
-    transform: scale(1.05); /* Subtle zoom effect */
+.portfolio-item:hover .video-thumbnail img {
+    transform: scale(1.05);
 }
 
+.play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 25, 47, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.portfolio-item:hover .play-overlay {
+    opacity: 1;
+}
+
+.view-project {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    background: var(--primary-color);
+    color: var(--card-bg) !important;
+    border-radius: 25px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    transform: scale(0.9);
+    opacity: 0;
+}
+
+.portfolio-item:hover .view-project {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.view-project:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.view-project i {
+    transition: transform 0.3s ease;
+}
+
+.view-project:hover i {
+    transform: translateX(3px);
+}
+
+.video-description {
+    padding: 1.5rem;
+    flex-grow: 1;
+}
+
+.video-description h4 {
+    color: #e6f1ff;
+    margin-bottom: 0.8rem;
+    font-size: 1.3rem;
+}
+
+.video-description p {
+    color: #8892b0;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
 .portfolio-overlay {
     position: absolute;
     top: 0;
