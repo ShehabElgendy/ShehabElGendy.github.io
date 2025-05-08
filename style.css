@@ -167,7 +167,7 @@ body {
 }
 
 .hero h1 {
-    font-size: 4.5rem;
+    font-size: 3.5rem;
     margin-bottom: 1.5rem;
     font-weight: 700;
     color: #e6f1ff;
@@ -176,12 +176,13 @@ body {
 }
 
 .hero p {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-bottom: 3rem;
     color: #8892b0;
-    max-width: 600px;
+    max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    line-height: 1.6;
 }
 
 .hero-buttons {
@@ -629,7 +630,7 @@ section h2.fade-in-visible {
 
 .skill-tags {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 0.7rem;
 }
 
@@ -641,6 +642,7 @@ section h2.fade-in-visible {
     font-size: 0.9rem;
     font-weight: 500;
     transition: all 0.3s ease;
+    text-align: center;
 }
 
 .skill-tags span:hover {
