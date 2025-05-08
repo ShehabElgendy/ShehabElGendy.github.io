@@ -1,5 +1,68 @@
 // Initialize event listeners when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
+    // Hero section slideshow
+    const slideshowBackground = document.querySelector('.slideshow-background');
+    if (slideshowBackground) {
+        const images = [
+            'images/light-ball-runner.png',
+            'images/Digital-Twin.png',
+            'images/vr-simulation.png',
+            'images/full-portfolio.png'
+        ];
+        
+        let currentIndex = 0;
+        
+        // Preload all images
+        const preloadedImages = images.map(src => {
+            const img = new Image();
+            img.src = src;
+            return img;
+        });
+        
+        // Set initial background
+        slideshowBackground.style.backgroundImage = `url('${images[0]}')`;        
+        
+        function nextSlide() {
+            // Get next index with wraparound
+            const nextIndex = (currentIndex + 1) % images.length;
+            
+            // Create temporary div for transition
+            const tempDiv = document.createElement('div');
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.top = '0';
+            tempDiv.style.left = '0';
+            tempDiv.style.width = '100%';
+            tempDiv.style.height = '100%';
+            tempDiv.style.backgroundImage = `url('${images[nextIndex]}')`;
+            tempDiv.style.backgroundSize = 'cover';
+            tempDiv.style.backgroundPosition = 'center';
+            tempDiv.style.filter = 'brightness(0.2) blur(3px)';
+            tempDiv.style.opacity = '0';
+            tempDiv.style.transition = 'opacity 1s ease-in-out';
+            tempDiv.style.zIndex = '0';
+            
+            // Add to DOM right before the slideshow background
+            slideshowBackground.parentNode.insertBefore(tempDiv, slideshowBackground);
+            
+            // Trigger transition
+            setTimeout(() => {
+                tempDiv.style.opacity = '1';
+            }, 50);
+            
+            // After transition completes
+            setTimeout(() => {
+                // Update the main background
+                slideshowBackground.style.backgroundImage = `url('${images[nextIndex]}')`;
+                // Remove the temporary div
+                tempDiv.remove();
+                // Update current index
+                currentIndex = nextIndex;
+            }, 1050);
+        }
+        
+        // Change slide every 5 seconds
+        setInterval(nextSlide, 5000);
+    }
     // Add fade-in class to all section headings
     document.querySelectorAll('section h2').forEach(heading => {
         heading.classList.add('fade-in');
