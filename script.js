@@ -291,37 +291,23 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
-        // Create the Intersection Observer with exit animations
+        // Create a simpler Intersection Observer that just toggles classes
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                // When element enters viewport
+                // Simply toggle the appear class based on intersection
                 if (entry.isIntersecting) {
-                    // Remove exit class if it exists
-                    entry.target.classList.remove('exit');
-                    // Add appear class with a small delay to ensure smooth transition
-                    setTimeout(() => {
-                        entry.target.classList.add('appear');
-                    }, 50);
+                    // Element is visible - add appear class immediately
+                    entry.target.classList.add('appear');
                 } else {
-                    // When element leaves viewport - add exit animation
-                    if (entry.target.classList.contains('appear')) {
-                        // Add exit class
-                        entry.target.classList.add('exit');
-                        
-                        // Remove appear class after exit animation completes
-                        setTimeout(() => {
-                            entry.target.classList.remove('appear');
-                            // After a bit more time, remove exit class to prepare for next entrance
-                            setTimeout(() => {
-                                entry.target.classList.remove('exit');
-                            }, 500);
-                        }, 400); // Match this to the exit animation duration in CSS
-                    }
+                    // Element is not visible - remove appear class immediately
+                    entry.target.classList.remove('appear');
                 }
             });
         }, {
-            threshold: 0.15, // Trigger when 15% of the element is visible
-            rootMargin: '0px 0px -50px 0px' // Trigger slightly before element comes into view
+            // Use multiple thresholds for smoother detection
+            threshold: [0, 0.1, 0.2],
+            // Expanded margin to detect elements earlier
+            rootMargin: '100px 0px 0px 0px'
         });
         
         // Observe all elements with animation classes
