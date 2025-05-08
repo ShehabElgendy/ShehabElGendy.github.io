@@ -724,6 +724,10 @@ section h2.fade-in-visible {
     overflow: hidden;
 }
 
+.contact-content .cta-button:hover {
+    color: #0a192f;
+}
+
 /* Footer */
 footer {
     background: #020c1b;
