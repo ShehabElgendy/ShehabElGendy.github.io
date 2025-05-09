@@ -42,9 +42,14 @@ document.addEventListener('DOMContentLoaded', function() {
             pointer-events: none;
             z-index: 1;
         }
-        .navbar, .hero-content, .portfolio-grid, .skills-grid, .contact-content, footer {
+        .hero-content, .portfolio-grid, .skills-grid, .contact-content, footer {
             position: relative;
             z-index: 2;
+        }
+        /* Don't override navbar - it has its own z-index in CSS */
+        .navbar {
+            position: fixed !important;
+            z-index: 9999 !important;
         }
         .hero::before, .hero::after {
             z-index: 0;

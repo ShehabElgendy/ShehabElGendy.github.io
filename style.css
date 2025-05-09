@@ -34,11 +34,12 @@ body {
 .navbar {
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
-    background: rgba(10, 25, 47, 0.4); /* Matching hero background transparency */
+    background: rgba(10, 25, 47, 0.8); /* Increased opacity for better visibility */
     padding: 1.2rem 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+    z-index: 9999; /* Increased z-index to ensure it stays on top */
     backdrop-filter: blur(3px); /* Matching hero backdrop filter */
 }
 
