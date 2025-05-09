@@ -1157,3 +1157,33 @@ footer {
         transform: translateY(0);
     }
 }
+/* Essential styles for particle effect */
+#particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Ensuring content appears above particles */
+.navbar, .hero-content, .portfolio-grid, .skills-grid, 
+.contact-content, footer, .section-title, .container h2,
+.portfolio-item, .skill-category, .contact-form, .social-links,
+.logo, .nav-links {
+    position: relative;
+    z-index: 2;
+}
+
+/* Make sure background elements are behind particles */
+.hero::before, .hero::after, .slideshow-background {
+    z-index: 0;
+}
+
+/* Ensure video modal appears above particles */
+.video-modal {
+    z-index: 1000 !important;
+}
