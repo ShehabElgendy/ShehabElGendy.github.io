@@ -1,4 +1,4 @@
-// Particle animation for the entire website - fixed version
+// Particle animation for the entire website - enhanced version with more particles
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on devices that can handle it (no mobile)
     if (window.innerWidth < 768) return;
@@ -123,17 +123,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Create particles - optimized count
+    // Create particles - significantly increased count
     const particles = [];
-    const particleDensity = 0.00006; // slightly increased
-    const particleCount = Math.min(Math.floor(width * height * particleDensity), 180); // increased max
+    // Increased density for more particles across the screen
+    const particleDensity = 0.00012; // Doubled from previous value
+    // Increased maximum count while still maintaining performance
+    const particleCount = Math.min(Math.floor(width * height * particleDensity), 300); // Increased from 180 to 300
     
     for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
     }
     
     // Connection distance based on screen size
-    const connectionDistance = Math.min(width, height) * 0.12; // increased for visibility
+    const connectionDistance = Math.min(width, height) * 0.12; // Same as before
     
     // Draw particles
     function animate() {
@@ -189,6 +191,20 @@ document.addEventListener('DOMContentLoaded', function() {
         resizeTimeout = setTimeout(function() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
+            
+            // Recalculate particle count on resize to ensure proper density
+            const newParticleCount = Math.min(Math.floor(width * height * particleDensity), 300);
+            
+            // Add or remove particles as needed
+            if (newParticleCount > particles.length) {
+                // Add more particles
+                for (let i = particles.length; i < newParticleCount; i++) {
+                    particles.push(new Particle());
+                }
+            } else if (newParticleCount < particles.length) {
+                // Remove excess particles
+                particles.splice(newParticleCount);
+            }
         }, 250);
     });
     
