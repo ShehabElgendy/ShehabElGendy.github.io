@@ -87,9 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Create particles
+    // Create particles - increased density for more visual impact
     const particles = [];
-    const particleCount = Math.min(Math.floor(width * height / 8000), 100);
+    const particleCount = Math.min(Math.floor(width * height / 4000), 200); // Doubled density and max count
     
     for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
