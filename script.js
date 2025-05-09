@@ -150,18 +150,68 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log("Using video URL:", videoUrl); // Debug to check URL
             
-            // Check if it's a Google Drive URL and convert to proper embed format if needed
+            // Check if it's a Google Drive URL and show a warning about CSP restrictions
             if (videoUrl.includes('drive.google.com/file/d/')) {
                 // Extract the file ID
                 const fileIdMatch = videoUrl.match(/\/d\/([^\/]+)/);
+
                 if (fileIdMatch && fileIdMatch[1]) {
+                    // Instead of embedding directly (which causes CSP errors), show a link
                     const fileId = fileIdMatch[1];
-                    // Create the proper embed URL
-                    videoUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-                    console.log("Converted to Google Drive preview URL:", videoUrl); // Debug
+                    
+                    // Create a modal with an explanation and a direct link
+                    const videoModal = document.createElement('div');
+                    videoModal.className = 'video-modal';
+                    videoModal.style.position = 'fixed';
+                    videoModal.style.top = '0';
+                    videoModal.style.left = '0';
+                    videoModal.style.width = '100%';
+                    videoModal.style.height = '100%';
+                    videoModal.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                    videoModal.style.display = 'flex';
+                    videoModal.style.justifyContent = 'center';
+                    videoModal.style.alignItems = 'center';
+                    videoModal.style.zIndex = '1000';
+                    
+                    videoModal.innerHTML = `
+                        <div class="video-wrapper" style="position: relative; width: 80%; max-width: 600px; background: #112240; border-radius: 8px; padding: 40px; text-align: center; color: white;">
+                            <button class="close-modal" style="position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: #64ffda; border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-times" style="color: #0a192f;"></i>
+                            </button>
+                            <h3 style="color: #64ffda; margin-bottom: 20px;">Google Drive Video</h3>
+                            <p style="margin-bottom: 20px;">This video is hosted on Google Drive, which doesn't allow direct embedding on external websites due to security policies.</p>
+                            <a href="${videoUrl}" target="_blank" style="display: inline-block; background: #64ffda; color: #0a192f; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold;">Open Video in New Tab</a>
+                        </div>
+                    `;
+                    
+                    // Add the modal to the document
+                    document.body.appendChild(videoModal);
+                    
+                    // Prevent scrolling while modal is open
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Add close functionality
+                    const closeButton = videoModal.querySelector('.close-modal');
+                    if (closeButton) {
+                        closeButton.addEventListener('click', () => {
+                            videoModal.remove();
+                            document.body.style.overflow = '';
+                        });
+                    }
+                    
+                    // Also close when clicking outside the modal content
+                    videoModal.addEventListener('click', (e) => {
+                        if (e.target === videoModal) {
+                            videoModal.remove();
+                            document.body.style.overflow = '';
+                        }
+                    });
+                    
+                    return; // Exit early since we've handled the modal
                 }
             }
             
+            // Only reach here for non-Google Drive videos or other embeds
             // Create the modal with the video
             const videoModal = document.createElement('div');
             videoModal.className = 'video-modal';
