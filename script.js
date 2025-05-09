@@ -198,14 +198,21 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add the modal to the document
             document.body.appendChild(videoModal);
             
-            // Prevent scrolling while modal is open
+            // Prevent scrolling while modal is open and hide navigation
             document.body.style.overflow = 'hidden';
+            const nav = document.querySelector('nav');
+            if (nav) {
+                nav.style.display = 'none';
+            }
             
             // Add close functionality
             const closeBtn = videoModal.querySelector('.close-modal');
             closeBtn.addEventListener('click', function() {
                 videoModal.remove();
                 document.body.style.overflow = '';
+                if (nav) {
+                    nav.style.display = '';
+                }
             });
             
             // Also close when clicking outside the video
@@ -213,6 +220,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (e.target === videoModal) {
                     videoModal.remove();
                     document.body.style.overflow = '';
+                    if (nav) {
+                        nav.style.display = '';
+                    }
                 }
             });
             
@@ -221,6 +231,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (e.key === 'Escape' && document.querySelector('.video-modal')) {
                     videoModal.remove();
                     document.body.style.overflow = '';
+                    if (nav) {
+                        nav.style.display = '';
+                    }
                 }
             });
         });
