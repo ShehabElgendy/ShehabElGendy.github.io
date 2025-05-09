@@ -918,13 +918,18 @@ footer {
 
 /* Mobile Menu Styles */
 .hamburger {
-    display: none;
+    display: none; /* Hidden by default on desktop */
     flex-direction: column;
     justify-content: space-between;
     width: 30px;
     height: 21px;
     cursor: pointer;
-    z-index: 1001;
+    z-index: 1002; /* Ensure it's above everything else */
+    position: relative; /* Ensure proper stacking context */
+    background: transparent; /* Ensure no background color */
+    border: none; /* Remove default button border */
+    padding: 0; /* Remove default padding */
+    outline: none; /* Remove outline */
 }
 
 .hamburger span {
@@ -950,29 +955,49 @@ footer {
 
 /* Comprehensive Responsive Design */
 @media (max-width: 768px) {
-    /* Mobile Navigation */
-    .hamburger {
-        display: flex;
+    /* Adjust navbar padding on mobile */
+    .navbar {
+        padding: 1rem 0;
     }
     
+    /* Mobile Navigation - with improved visibility */
+    .nav-content {
+        position: relative; /* Ensure proper positioning context */
+        padding: 0 1rem; /* Add padding for mobile */
+    }
+    
+    .hamburger {
+        display: flex; /* Show on mobile */
+        position: absolute; /* Position absolutely within nav-content */
+        z-index: 2000; /* Ensure hamburger stays on top */
+        right: 1rem; /* Align to the right with specific measurement */
+        top: 50%; /* Center vertically */
+        transform: translateY(-50%); /* Perfect vertical centering */
+        margin: 0; /* Remove margins */
+    }
+    
+    /* Mobile menu styling */
     .nav-links {
         position: fixed;
         top: 0;
-        right: -100%;
-        width: 70%;
+        right: -100%; /* Off-screen by default */
+        width: 80%; /* Slightly wider for better usability */
         height: 100vh;
-        background: rgba(17, 34, 64, 0.95);
+        background: rgba(10, 25, 47, 0.98); /* Darker, more opaque background */
         backdrop-filter: blur(10px);
+        display: flex !important; /* Force display as flex on mobile */
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        transition: all 0.5s ease;
-        z-index: 1000;
+        transition: right 0.4s ease-in-out; /* Specific transition for performance */
+        z-index: 1500; /* High enough to be visible but below hamburger */
         padding: 2rem;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5); /* Stronger shadow */
     }
     
+    /* Active state for mobile menu */
     .nav-links.active {
-        right: 0;
+        right: 0; /* Slide in from right */
     }
     
     .nav-links li {

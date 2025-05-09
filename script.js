@@ -1,12 +1,21 @@
 // Initialize event listeners when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
-    // Mobile menu toggle
+    // Mobile menu toggle - improved with logging and forced redraw
     const navMenu = document.querySelector('.nav-links');
     const hamburger = document.querySelector('.hamburger');
+    
+    // Log hamburger element to verify it exists
+    console.log('Hamburger element:', hamburger);
+    console.log('Nav menu element:', navMenu);
 
-    hamburger.addEventListener('click', function() {
+    hamburger.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent event bubbling
+        console.log('Hamburger clicked');
         navMenu.classList.toggle('active');
         hamburger.classList.toggle('active');
+        
+        // Force a browser redraw to ensure styles apply
+        navMenu.offsetHeight;
     });
 
     // Close mobile menu when clicking outside
