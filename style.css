@@ -768,6 +768,17 @@ section h2.fade-in-visible {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    /* Fix for horizontal scrolling on mobile only */
+    html, body {
+        overflow-x: hidden;
+        width: 100%;
+        position: relative;
+    }
+    
+    img, video, canvas, iframe, .portfolio-item, .skill-category, .hero-content, .video-wrapper, .container, section {
+        max-width: 100%;
+    }
+
     .nav-links {
         display: none;
     }
