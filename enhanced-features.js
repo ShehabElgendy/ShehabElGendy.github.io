@@ -427,6 +427,7 @@ function addTestimonialSection() {
                 border-radius: 8px;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
                 position: relative;
+                min-height: 250px; /* Fixed minimum height for consistency */
             }
             
             .quote-icon {
@@ -440,6 +441,11 @@ function addTestimonialSection() {
                 line-height: 1.6;
                 margin-bottom: 30px;
                 color: #e6f1ff;
+                min-height: 120px; /* Fixed minimum height for text content */
+                display: -webkit-box;
+                -webkit-line-clamp: 5;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
             }
             
             .testimonial-author {
@@ -509,10 +515,17 @@ function addTestimonialSection() {
             @media (max-width: 768px) {
                 .testimonial-content {
                     padding: 30px 20px;
+                    min-height: 200px; /* Adjusted for mobile */
                 }
                 
                 .testimonial-text {
                     font-size: 16px;
+                    min-height: 100px; /* Adjusted for mobile */
+                    -webkit-line-clamp: 4; /* Show fewer lines on mobile */
+                }
+                
+                .testimonial-navigation {
+                    margin-top: 20px; /* Reduce top margin on mobile */
                 }
             }
         `;
