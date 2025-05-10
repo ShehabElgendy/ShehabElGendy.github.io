@@ -333,7 +333,7 @@ function addTestimonialSection() {
         }
     ];
     
-    // Create testimonial section HTML
+    // Create testimonial section HTML with a better structure for consistent layout
     const testimonialSection = document.createElement('section');
     testimonialSection.className = 'testimonials';
     testimonialSection.id = 'testimonials';
@@ -341,22 +341,26 @@ function addTestimonialSection() {
     testimonialSection.innerHTML = `
         <div class="container">
             <h2 class="section-title">Testimonials</h2>
-            <div class="testimonial-slider">
-                <div class="testimonial-track">
-                    ${testimonials.map((testimonial, index) => `
-                        <div class="testimonial-slide" data-index="${index}">
-                            <div class="testimonial-content">
-                                <div class="quote-icon">
-                                    <i class="fas fa-quote-left"></i>
-                                </div>
-                                <p class="testimonial-text">${testimonial.text}</p>
-                                <div class="testimonial-author">
-                                    <p class="author-name">${testimonial.author}</p>
-                                    <p class="author-title">${testimonial.title}</p>
+            <div class="testimonial-slider-container">
+                <div class="testimonial-slider">
+                    <div class="testimonial-track">
+                        ${testimonials.map((testimonial, index) => `
+                            <div class="testimonial-slide" data-index="${index}">
+                                <div class="testimonial-content">
+                                    <div class="quote-icon">
+                                        <i class="fas fa-quote-left"></i>
+                                    </div>
+                                    <div class="testimonial-text-container">
+                                        <p class="testimonial-text">${testimonial.text}</p>
+                                    </div>
+                                    <div class="testimonial-author">
+                                        <p class="author-name">${testimonial.author}</p>
+                                        <p class="author-title">${testimonial.title}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    `).join('')}
+                        `).join('')}
+                    </div>
                 </div>
                 <div class="testimonial-navigation">
                     <button class="prev-testimonial" aria-label="Previous testimonial">
@@ -395,16 +399,22 @@ function addTestimonialSection() {
                 background-color: #0a192f;
             }
             
-            .testimonial-slider {
-                position: relative;
+            .testimonial-slider-container {
                 max-width: 800px;
                 margin: 0 auto;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .testimonial-slider {
+                position: relative;
                 overflow: hidden;
+                margin-bottom: 30px;
             }
             
             .testimonial-track {
                 display: flex;
-                transition: transform 0.6s ease-out;
+                transition: transform 0.5s ease;
             }
             
             .testimonial-slide {
@@ -413,7 +423,7 @@ function addTestimonialSection() {
                 box-sizing: border-box;
                 opacity: 0.4;
                 transform: scale(0.8);
-                transition: opacity 0.6s ease, transform 0.6s ease;
+                transition: opacity 0.5s ease, transform 0.5s ease;
             }
             
             .testimonial-slide.active {
@@ -427,7 +437,6 @@ function addTestimonialSection() {
                 border-radius: 8px;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
                 position: relative;
-                min-height: 250px; /* Fixed minimum height for consistency */
             }
             
             .quote-icon {
@@ -436,16 +445,15 @@ function addTestimonialSection() {
                 margin-bottom: 20px;
             }
             
+            .testimonial-text-container {
+                margin-bottom: 30px;
+            }
+            
             .testimonial-text {
                 font-size: 18px;
                 line-height: 1.6;
-                margin-bottom: 30px;
                 color: #e6f1ff;
-                min-height: 120px; /* Fixed minimum height for text content */
-                display: -webkit-box;
-                -webkit-line-clamp: 5;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
+                margin: 0;
             }
             
             .testimonial-author {
@@ -470,7 +478,8 @@ function addTestimonialSection() {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-top: 30px;
+                padding: 10px 0;
+                position: relative;
             }
             
             .prev-testimonial,
@@ -515,17 +524,24 @@ function addTestimonialSection() {
             @media (max-width: 768px) {
                 .testimonial-content {
                     padding: 30px 20px;
-                    min-height: 200px; /* Adjusted for mobile */
                 }
                 
                 .testimonial-text {
                     font-size: 16px;
-                    min-height: 100px; /* Adjusted for mobile */
-                    -webkit-line-clamp: 4; /* Show fewer lines on mobile */
+                }
+                
+                .testimonial-slider {
+                    margin-bottom: 20px;
                 }
                 
                 .testimonial-navigation {
-                    margin-top: 20px; /* Reduce top margin on mobile */
+                    padding: 5px 0;
+                }
+                
+                .prev-testimonial,
+                .next-testimonial {
+                    font-size: 16px;
+                    padding: 8px;
                 }
             }
         `;
@@ -540,6 +556,35 @@ function addTestimonialSection() {
     const dots = document.querySelectorAll('.testimonial-dot');
     const prevBtn = document.querySelector('.prev-testimonial');
     const nextBtn = document.querySelector('.next-testimonial');
+    
+    // Set equal heights for all slides after page is fully loaded
+    window.addEventListener('load', () => {
+        // Wait a bit to ensure all content is rendered
+        setTimeout(() => {
+            // Reset any previously set heights
+            slides.forEach(slide => {
+                slide.style.minHeight = '';
+            });
+            
+            // Find the tallest slide
+            let maxHeight = 0;
+            slides.forEach(slide => {
+                const content = slide.querySelector('.testimonial-content');
+                const contentHeight = content.offsetHeight;
+                if (contentHeight > maxHeight) {
+                    maxHeight = contentHeight;
+                }
+            });
+            
+            // Set consistent height for all slides
+            if (maxHeight > 0) {
+                slides.forEach(slide => {
+                    const content = slide.querySelector('.testimonial-content');
+                    content.style.minHeight = `${maxHeight}px`;
+                });
+            }
+        }, 300);
+    });
     
     // Mark first slide as active
     if (slides.length > 0) {
