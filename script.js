@@ -1,5 +1,9 @@
 // Initialize event listeners when the document is ready
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize analytics tracking
+    if (window.analyticsTools && typeof window.analyticsTools.setupAnalytics === 'function') {
+        window.analyticsTools.setupAnalytics();
+    }
     // Mobile menu toggle - improved with logging and forced redraw
     const navMenu = document.querySelector('.nav-links');
     const hamburger = document.querySelector('.hamburger');
