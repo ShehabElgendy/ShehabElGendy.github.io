@@ -395,8 +395,10 @@ function addTestimonialSection() {
         styleSheet.id = 'testimonial-styles';
         styleSheet.textContent = `
             .testimonials {
+                position: relative;
+                z-index: 1; /* Match hero-content stacking context */
                 padding: 80px 0;
-                background-color: #0a192f;
+                background: transparent;
             }
             
             .testimonial-slider-container {
