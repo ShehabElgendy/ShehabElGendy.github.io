@@ -15,6 +15,9 @@
     </script>
     <!-- Inline favicon using data URI (a simple gaming controller icon) -->
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNjRmZmRhIiBkPSJNMzg0IDY0SDMyOFYyNGE4IDggMCAwIDAtOC04SDE5MmE4IDggMCAwIDAtOCA4djQwSDEyOEMzMC42ODggNjQgMCA5NSwwIDE5MnYxMjhjMCA5Ni4zMTMgMzAuNjg4IDEyOCAxMjggMTI4aDI1NmM5Ni4zMTMgMCAxMjgtMzEuNjg4IDEyOC0xMjhWMTkyYzAtOTYuMzEyLTMxLjY4Ny0xMjgtMTI4LTEyOHptLTQ4IDExMmE0OCA0OCAwIDEgMSA0OCA0OSA0OCA0OCAwIDAgMS00OC00OXptLTc1LjUgMTIyaC00OXY0OWEyNC41IDI0LjUgMCAwIDEtNDkgMFYyOThoLTQ5YTI0LjUgMjQuNSAwIDAgMSAwLTQ5aDQ5di00OWEyNC41IDI0LjUgMCAwIDEgNDkgMHY0OWg0OWEyNC41IDI0LjUgMCAwIDEgMCA0OXptMjA3LjUtOTlhNDkgNDkgMCAxIDEgNDktNDkgNDguNTUgNDguNTUgMCAwIDEtNDkgNDl6Ii8+PC9zdmc+">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightGallery.js/1.6.12/css/lightgallery.min.css">
@@ -35,23 +38,48 @@
             </button>
             <!-- Navigation links -->
             <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
         </div>
+        <!-- Progress indicator -->
+        <div class="scroll-progress"></div>
     </nav>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="slideshow-background"></div>
+        <div class="hero-background">
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+                <div class="shape shape-4"></div>
+            </div>
+        </div>
         <div class="hero-content">
-            <h1>Crafting Immersive, Scalable Interactive Experiences</h1>
-            <p>Specializing in Unity development for immersive simulations and cross-platform applications, including WebGL, mobile, and PC. Experienced in integrating custom hardware, optimizing real-time performance, and delivering high-quality technical solutions across education, simulation, and entertainment domains.</p>
-            <a href="#portfolio" class="cta-button">
-                <i class="fas fa-eye"></i> View Portfolio
-            </a>
+            <div class="hero-badge">✨ Game Developer & XR Specialist</div>
+            <h1 class="hero-title">
+                <span class="highlight">Crafting</span> Immersive,<br>
+                <span class="gradient-text">Scalable Interactive</span><br>
+                Experiences
+            </h1>
+            <p class="hero-description">Specializing in Unity development for immersive simulations and cross-platform applications, including WebGL, mobile, and PC. Experienced in integrating custom hardware, optimizing real-time performance, and delivering high-quality technical solutions.</p>
+            <div class="hero-buttons">
+                <a href="#portfolio" class="cta-button primary">
+                    <i class="fas fa-play"></i> 
+                    <span>View Portfolio</span>
+                </a>
+                <a href="#contact" class="cta-button secondary">
+                    <i class="fas fa-envelope"></i> 
+                    <span>Get In Touch</span>
+                </a>
+            </div>
+        </div>
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-arrow"></div>
         </div>
     </section>
 
@@ -248,6 +276,7 @@
         <p>&copy; 2025 Shehab ElGendy. All rights reserved.</p>
     </footer>
 
+    <script src="modern-enhancements.js"></script>
     <script src="analytics.js"></script>
     <script src="script.js"></script>
     <script src="particles.js"></script>
