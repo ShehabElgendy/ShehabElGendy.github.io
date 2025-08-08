@@ -1,4 +1,4 @@
-# Shehab ElGendy Portfolio Website - AI Development Guide
+# Shehab ElGendy Portfolio Website
 
 ## Project Overview
 This is a modern, responsive portfolio website for Shehab ElGendy, a Lead Game Developer specializing in Unity, XR, and immersive experiences. The site showcases his projects, skills, and contact information with modern glassmorphism design and enhanced user experience.
