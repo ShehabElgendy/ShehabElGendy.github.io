@@ -221,6 +221,14 @@ function logVisitor(data) {
         };
         
         console.log('🕵️ NEW UNIQUE VISITOR:', data);
+        
+        // Show command reminder for new visitors
+        setTimeout(() => {
+            console.log('\n💡 VISITOR TRACKING COMMANDS:');
+            console.log('   analyticsTools.showVisitorLog() - View all visitors');
+            console.log('   analyticsTools.clearVisitorLog() - Clear visitor data');
+            console.log('='.repeat(50));
+        }, 2000);
     }
     
     // Keep only last 500 unique visitors
