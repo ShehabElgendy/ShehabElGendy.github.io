@@ -354,7 +354,7 @@ body.loaded {
     color: var(--primary-color);
     font-size: 0.9rem;
     font-weight: 500;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
     animation: glow 2s ease-in-out infinite alternate;
 }
 
