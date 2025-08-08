@@ -24,15 +24,9 @@ This is a modern, responsive portfolio website for Shehab ElGendy, a Lead Game D
 - `enhanced-features.js` - Additional interactive features
 - `analytics.js` - Google Analytics integration
 
-### Legacy Files (Unused)
-- `elements.html` - HTML5 UP template elements (not used)
-- `generic.html` - HTML5 UP template page (not used)
-- `assets/` - HTML5 UP template assets (partially used)
 
 ### Media Assets
 - `images/` - Project screenshots and hero images
-- `assets/images/` - Template images (legacy)
-- `assets/webfonts/` - FontAwesome font files
 
 ## Design System
 
@@ -117,9 +111,10 @@ Located in `:root` in `style.css`:
 
 ### Performance Optimizations
 - CSS/JS minification not currently implemented (opportunity for improvement)
-- Image optimization needed (current images are large)
+- Image optimization needed (current images are large - Digital-Twin.png 2.2MB, light-ball-runner.png 1.2MB, full-portfolio.png 1MB, vr-simulation.png 1.6MB)
 - Lazy loading for off-screen content
 - Efficient event listeners with proper cleanup
+- ✅ **Recently cleaned up**: Removed 72 unused legacy template files (18,625 lines of code)
 
 ### Browser Compatibility
 - Modern browsers (Chrome, Firefox, Safari, Edge)
@@ -185,10 +180,14 @@ Located in `:root` in `style.css`:
 - All animations use CSS transitions and transforms for performance
 
 ## Known Issues & Technical Debt
-1. Large image file sizes impact loading performance
+1. Large image file sizes impact loading performance (4 PNG files: 2.2MB, 1.2MB, 1MB, 1.6MB)
 2. No build process for optimization
-3. Some legacy HTML5 UP template files remain unused
-4. Manual cache busting requires updating version numbers
-5. No automated testing or linting setup
+3. Manual cache busting requires updating version numbers
+4. No automated testing or linting setup
+
+## Recent Improvements
+- ✅ **Code Cleanup (2025-01-08)**: Removed 72 unused legacy template files including entire `assets/` directory, `elements.html`, `generic.html`, and unused template images
+- ✅ **Project Structure**: Streamlined to only essential files
+- ✅ **Performance**: Eliminated 18,625 lines of unused code
 
 This documentation should help any AI model understand the project structure, conventions, and requirements before making changes or improvements.
