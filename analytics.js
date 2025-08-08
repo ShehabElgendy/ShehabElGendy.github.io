@@ -176,65 +176,129 @@ function getVisitCount() {
 }
 
 function logVisitor(data) {
-    // Store in localStorage
-    const visitors = JSON.parse(localStorage.getItem('visitorLog') || '[]');
-    visitors.unshift(data); // Add to beginning
+    const visitors = JSON.parse(localStorage.getItem('uniqueVisitors') || '{}');
+    const visitorKey = data.ip || data.userAgent.substring(0, 50); // Use IP as primary identifier
     
-    // Keep only last 100 visits
-    if (visitors.length > 100) {
-        visitors.splice(100);
+    if (visitors[visitorKey]) {
+        // Existing visitor - update visit count and last visit
+        visitors[visitorKey].visitCount++;
+        visitors[visitorKey].lastVisit = data.timestamp;
+        visitors[visitorKey].sessions.push({
+            timestamp: data.timestamp,
+            sessionId: data.sessionId,
+            viewport: data.viewport,
+            referrer: data.referrer
+        });
+        
+        console.log(`🔄 RETURNING VISITOR: ${data.ip} (${data.city}) - Visit #${visitors[visitorKey].visitCount}`);
+    } else {
+        // New unique visitor
+        visitors[visitorKey] = {
+            firstVisit: data.timestamp,
+            lastVisit: data.timestamp,
+            visitCount: 1,
+            ip: data.ip,
+            city: data.city,
+            country: data.country,
+            isp: data.isp,
+            browser: getBrowserInfo(data.userAgent),
+            platform: data.platform,
+            screen: data.screen,
+            languages: data.languages,
+            timezone: data.timezone,
+            touchSupport: data.touchSupport,
+            webGL: data.webGL,
+            concurrency: data.concurrency,
+            memory: data.memory,
+            connection: data.connection,
+            adBlocker: data.adBlocker,
+            sessions: [{
+                timestamp: data.timestamp,
+                sessionId: data.sessionId,
+                viewport: data.viewport,
+                referrer: data.referrer
+            }]
+        };
+        
+        console.log('🕵️ NEW UNIQUE VISITOR:', data);
     }
     
-    localStorage.setItem('visitorLog', JSON.stringify(visitors));
+    // Keep only last 500 unique visitors
+    const visitorKeys = Object.keys(visitors);
+    if (visitorKeys.length > 500) {
+        // Remove oldest visitors
+        const oldestKeys = visitorKeys
+            .sort((a, b) => new Date(visitors[a].lastVisit) - new Date(visitors[b].lastVisit))
+            .slice(0, visitorKeys.length - 500);
+        oldestKeys.forEach(key => delete visitors[key]);
+    }
     
-    // Also log to console for immediate viewing
-    console.log('🕵️ NEW VISITOR DETECTED:', data);
+    localStorage.setItem('uniqueVisitors', JSON.stringify(visitors));
     
-    // Track in Google Analytics too
+    // Track in Google Analytics
     gtag('event', 'visitor_tracked', {
         'visitor_country': data.country,
         'visitor_city': data.city,
-        'visit_count': data.visitCount
+        'visit_count': visitors[visitorKey].visitCount,
+        'visitor_type': visitors[visitorKey].visitCount === 1 ? 'new' : 'returning'
     });
 }
 
 // Function to display visitor log
 function showVisitorLog() {
-    const visitors = JSON.parse(localStorage.getItem('visitorLog') || '[]');
+    const visitors = JSON.parse(localStorage.getItem('uniqueVisitors') || '{}');
+    const visitorKeys = Object.keys(visitors);
     
-    if (visitors.length === 0) {
+    if (visitorKeys.length === 0) {
         console.log('📊 No visitors logged yet');
         return;
     }
     
-    console.log(`📊 VISITOR LOG (${visitors.length} total visits):`);
+    // Sort by last visit (most recent first)
+    const sortedVisitors = visitorKeys.sort((a, b) => 
+        new Date(visitors[b].lastVisit) - new Date(visitors[a].lastVisit)
+    );
+    
+    console.log(`📊 UNIQUE VISITORS LOG (${visitorKeys.length} unique visitors):`);
     console.log('='.repeat(80));
     
-    visitors.forEach((visitor, index) => {
-        const date = new Date(visitor.timestamp);
-        console.log(`\n🔍 Visit #${index + 1} | ${date.toLocaleString()}`);
+    sortedVisitors.forEach((key, index) => {
+        const visitor = visitors[key];
+        const firstVisit = new Date(visitor.firstVisit);
+        const lastVisit = new Date(visitor.lastVisit);
+        const totalSessions = visitor.sessions.length;
+        
+        console.log(`\n👤 Visitor #${index + 1} | ${visitor.visitCount} visits | Last: ${lastVisit.toLocaleString()}`);
         console.log(`   🌍 IP: ${visitor.ip} | ${visitor.city}, ${visitor.country} | ISP: ${visitor.isp}`);
-        console.log(`   💻 Browser: ${getBrowserInfo(visitor.userAgent)} | OS: ${visitor.platform}`);
-        console.log(`   📱 Screen: ${visitor.screen} | Viewport: ${visitor.viewport} | Touch: ${visitor.touchSupport}`);
+        console.log(`   💻 Browser: ${visitor.browser} | OS: ${visitor.platform} | Screen: ${visitor.screen}`);
         console.log(`   🌐 Languages: ${visitor.languages} | Timezone: ${visitor.timezone}`);
-        console.log(`   🔧 CPU Cores: ${visitor.concurrency} | Memory: ${visitor.memory}`);
-        console.log(`   📶 Connection: ${visitor.connection} | Online: ${visitor.onlineStatus}`);
+        console.log(`   🔧 CPU: ${visitor.concurrency} cores | Memory: ${visitor.memory} | Touch: ${visitor.touchSupport}`);
+        console.log(`   📶 Connection: ${visitor.connection} | AdBlock: ${visitor.adBlocker}`);
         console.log(`   🎮 WebGL: ${visitor.webGL}`);
-        console.log(`   🛡️ AdBlocker: ${visitor.adBlocker} | DoNotTrack: ${visitor.doNotTrack}`);
-        console.log(`   💾 Storage: LS(${visitor.localStorage}) SS(${visitor.sessionStorage}) IDB(${visitor.indexedDB})`);
-        console.log(`   📊 Referrer: ${visitor.referrer} | Visit #${visitor.visitCount}`);
-        console.log(`   🆔 Session: ${visitor.sessionId}`);
+        console.log(`   📅 First Visit: ${firstVisit.toLocaleString()}`);
+        
+        if (totalSessions > 1) {
+            console.log(`   🔄 Recent Sessions:`);
+            visitor.sessions.slice(-3).forEach((session, i) => {
+                const sessionDate = new Date(session.timestamp);
+                console.log(`      ${i + 1}. ${sessionDate.toLocaleString()} | ${session.referrer}`);
+            });
+        }
     });
     
     console.log('\n📈 Quick Stats:');
-    const countries = [...new Set(visitors.map(v => v.country))];
-    const cities = [...new Set(visitors.map(v => v.city))];
-    const browsers = [...new Set(visitors.map(v => getBrowserInfo(v.userAgent)))];
+    const totalVisits = Object.values(visitors).reduce((sum, v) => sum + v.visitCount, 0);
+    const countries = [...new Set(Object.values(visitors).map(v => v.country))];
+    const cities = [...new Set(Object.values(visitors).map(v => v.city))];
+    const browsers = [...new Set(Object.values(visitors).map(v => v.browser))];
+    const returningVisitors = Object.values(visitors).filter(v => v.visitCount > 1).length;
     
-    console.log(`   Unique Countries: ${countries.join(', ')}`);
-    console.log(`   Unique Cities: ${cities.join(', ')}`);
-    console.log(`   Browsers Used: ${browsers.join(', ')}`);
-    console.log(`   Total Unique Visitors: ${new Set(visitors.map(v => v.ip)).size}`);
+    console.log(`   Total Unique Visitors: ${visitorKeys.length}`);
+    console.log(`   Total Page Views: ${totalVisits}`);
+    console.log(`   Returning Visitors: ${returningVisitors} (${Math.round(returningVisitors/visitorKeys.length*100)}%)`);
+    console.log(`   Countries: ${countries.join(', ')}`);
+    console.log(`   Cities: ${cities.join(', ')}`);
+    console.log(`   Browsers: ${browsers.join(', ')}`);
 }
 
 function getBrowserInfo(userAgent) {
@@ -328,7 +392,7 @@ function isIndexedDBAvailable() {
 
 // Function to clear visitor log
 function clearVisitorLog() {
-    localStorage.removeItem('visitorLog');
+    localStorage.removeItem('uniqueVisitors');
     localStorage.removeItem('visitCount');
     console.log('🗑️ Visitor log cleared');
 }
