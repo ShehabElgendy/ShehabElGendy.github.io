@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize analytics tracking
     if (window.analyticsTools && typeof window.analyticsTools.setupAnalytics === 'function') {
         window.analyticsTools.setupAnalytics();
+        window.analyticsTools.setupVisitorTracking();
+        window.analyticsTools.startRealtimeTracking();
     }
     // Mobile menu toggle - improved with logging and forced redraw
     const navMenu = document.querySelector('.nav-links');
