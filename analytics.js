@@ -119,14 +119,31 @@ function setupVisitorTracking() {
         userAgent: navigator.userAgent,
         platform: navigator.platform,
         language: navigator.language,
+        languages: navigator.languages?.join(', ') || navigator.language,
         cookieEnabled: navigator.cookieEnabled,
+        doNotTrack: navigator.doNotTrack || 'not set',
         screen: `${screen.width}x${screen.height}`,
         viewport: `${window.innerWidth}x${window.innerHeight}`,
+        colorDepth: screen.colorDepth,
+        pixelRatio: window.devicePixelRatio || 1,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         url: window.location.href,
         referrer: document.referrer || 'Direct visit',
         sessionId: generateSessionId(),
-        visitCount: getVisitCount()
+        visitCount: getVisitCount(),
+        onlineStatus: navigator.onLine ? 'Online' : 'Offline',
+        javaEnabled: typeof java !== 'undefined',
+        flashEnabled: getFlashVersion(),
+        adBlocker: detectAdBlocker(),
+        battery: 'detecting...',
+        connection: getConnectionInfo(),
+        memory: getMemoryInfo(),
+        concurrency: navigator.hardwareConcurrency || 'unknown',
+        touchSupport: getTouchSupport(),
+        webGL: getWebGLInfo(),
+        localStorage: isLocalStorageAvailable(),
+        sessionStorage: isSessionStorageAvailable(),
+        indexedDB: isIndexedDBAvailable()
     };
 
     // Get visitor IP and location info
@@ -196,14 +213,17 @@ function showVisitorLog() {
     visitors.forEach((visitor, index) => {
         const date = new Date(visitor.timestamp);
         console.log(`\n🔍 Visit #${index + 1} | ${date.toLocaleString()}`);
-        console.log(`   IP: ${visitor.ip} | Location: ${visitor.city}, ${visitor.country}`);
-        console.log(`   Browser: ${getBrowserInfo(visitor.userAgent)}`);
-        console.log(`   OS: ${visitor.platform} | Screen: ${visitor.screen}`);
-        console.log(`   Language: ${visitor.language} | Timezone: ${visitor.timezone}`);
-        console.log(`   ISP: ${visitor.isp}`);
-        console.log(`   Referrer: ${visitor.referrer}`);
-        console.log(`   Visit Count: ${visitor.visitCount}`);
-        console.log(`   Session: ${visitor.sessionId}`);
+        console.log(`   🌍 IP: ${visitor.ip} | ${visitor.city}, ${visitor.country} | ISP: ${visitor.isp}`);
+        console.log(`   💻 Browser: ${getBrowserInfo(visitor.userAgent)} | OS: ${visitor.platform}`);
+        console.log(`   📱 Screen: ${visitor.screen} | Viewport: ${visitor.viewport} | Touch: ${visitor.touchSupport}`);
+        console.log(`   🌐 Languages: ${visitor.languages} | Timezone: ${visitor.timezone}`);
+        console.log(`   🔧 CPU Cores: ${visitor.concurrency} | Memory: ${visitor.memory}`);
+        console.log(`   📶 Connection: ${visitor.connection} | Online: ${visitor.onlineStatus}`);
+        console.log(`   🎮 WebGL: ${visitor.webGL}`);
+        console.log(`   🛡️ AdBlocker: ${visitor.adBlocker} | DoNotTrack: ${visitor.doNotTrack}`);
+        console.log(`   💾 Storage: LS(${visitor.localStorage}) SS(${visitor.sessionStorage}) IDB(${visitor.indexedDB})`);
+        console.log(`   📊 Referrer: ${visitor.referrer} | Visit #${visitor.visitCount}`);
+        console.log(`   🆔 Session: ${visitor.sessionId}`);
     });
     
     console.log('\n📈 Quick Stats:');
@@ -225,6 +245,87 @@ function getBrowserInfo(userAgent) {
     return 'Other';
 }
 
+// Helper functions for advanced visitor data
+function getFlashVersion() {
+    try {
+        return navigator.plugins['Shockwave Flash'] ? 'Enabled' : 'Disabled';
+    } catch (e) {
+        return 'Unknown';
+    }
+}
+
+function detectAdBlocker() {
+    const testAd = document.createElement('div');
+    testAd.innerHTML = '&nbsp;';
+    testAd.className = 'adsbox';
+    testAd.style.position = 'absolute';
+    testAd.style.left = '-9999px';
+    document.body.appendChild(testAd);
+    
+    setTimeout(() => {
+        const adBlocked = testAd.offsetHeight === 0;
+        document.body.removeChild(testAd);
+        return adBlocked ? 'Detected' : 'None';
+    }, 100);
+    
+    return 'Testing...';
+}
+
+function getConnectionInfo() {
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (connection) {
+        return `${connection.effectiveType || 'unknown'} (${connection.downlink || 'unknown'} Mbps)`;
+    }
+    return 'Unknown';
+}
+
+function getMemoryInfo() {
+    if ('memory' in performance) {
+        const mem = performance.memory;
+        return `${Math.round(mem.usedJSHeapSize / 1048576)}MB used / ${Math.round(mem.totalJSHeapSize / 1048576)}MB total`;
+    }
+    return 'Unknown';
+}
+
+function getTouchSupport() {
+    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) ? 'Yes' : 'No';
+}
+
+function getWebGLInfo() {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (gl) {
+        const renderer = gl.getParameter(gl.RENDERER);
+        const vendor = gl.getParameter(gl.VENDOR);
+        return `${vendor} ${renderer}`.substring(0, 50);
+    }
+    return 'Not supported';
+}
+
+function isLocalStorageAvailable() {
+    try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+        return 'Available';
+    } catch (e) {
+        return 'Blocked';
+    }
+}
+
+function isSessionStorageAvailable() {
+    try {
+        sessionStorage.setItem('test', 'test');
+        sessionStorage.removeItem('test');
+        return 'Available';
+    } catch (e) {
+        return 'Blocked';
+    }
+}
+
+function isIndexedDBAvailable() {
+    return 'indexedDB' in window ? 'Available' : 'Not supported';
+}
+
 // Function to clear visitor log
 function clearVisitorLog() {
     localStorage.removeItem('visitorLog');
@@ -234,13 +335,13 @@ function clearVisitorLog() {
 
 // Real-time visitor counter
 function startRealtimeTracking() {
-    // Track page interactions
+    // Track page interactions (no scrolling)
     let interactions = 0;
     
-    ['click', 'scroll', 'keydown'].forEach(event => {
+    ['click', 'keydown'].forEach(event => {
         document.addEventListener(event, () => {
             interactions++;
-            if (interactions % 10 === 0) {
+            if (interactions % 5 === 0) {
                 console.log(`🔥 User is active! ${interactions} interactions this session`);
             }
         }, { passive: true });
