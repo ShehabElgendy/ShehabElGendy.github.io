@@ -3,7 +3,16 @@
     "allow": [
       "WebFetch(domain:play.google.com)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "WebFetch(domain:devessammohamed.vercel.app)",
+      "WebFetch(domain:simpleicons.org)",
+      "WebFetch(domain:cdn.jsdelivr.net)",
+      "WebFetch(domain:devicon.dev)",
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "WebFetch(domain:www.nuget.org)"
     ],
     "deny": []
   }
