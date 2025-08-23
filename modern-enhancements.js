@@ -82,26 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(el);
     });
 
-    // Hamburger menu toggle
-    const hamburger = document.querySelector('.hamburger');
-    const navLinksContainer = document.querySelector('.nav-links');
-    
-    if (hamburger) {
-        hamburger.addEventListener('click', function() {
-            hamburger.classList.toggle('active');
-            navLinksContainer.classList.toggle('active');
-            document.body.classList.toggle('nav-open');
-        });
-    }
-
-    // Close mobile menu when clicking on a link
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            hamburger.classList.remove('active');
-            navLinksContainer.classList.remove('active');
-            document.body.classList.remove('nav-open');
-        });
-    });
+    // Hamburger menu functionality is handled in script.js to avoid duplicates
 
     // Parallax effect for floating shapes
     function updateParallax() {

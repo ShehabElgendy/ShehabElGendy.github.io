@@ -1205,9 +1205,7 @@ section h2.fade-in-visible {
         max-width: 100%;
     }
 
-    .nav-links {
-        display: none;
-    }
+    /* Mobile nav-links styling moved below */
     
     /* Hero section mobile improvements */
     .hero-content {
