@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2025010701">
+    <link rel="stylesheet" href="style.css?v=2025010724">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightGallery.js/1.6.12/css/lightgallery.min.css">
 </head>
@@ -61,6 +61,10 @@
                 <div class="shape shape-4"></div>
             </div>
         </div>
+        <!-- 3D Model Canvas -->
+        <canvas id="threejs-canvas"></canvas>
+        <!-- Drag Me text for 3D model -->
+        <div class="drag-me-text">Drag Me!</div>
         <div class="hero-content">
             <div class="hero-badge"></div>
             <h1 class="hero-title" data-aos="fade-up">
@@ -358,6 +362,14 @@
         <p>&copy; 2025 Shehab ElGendy. All rights reserved.</p>
     </footer>
 
+    <!-- Three.js library - using older stable version -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r119/three.min.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r119/examples/js/loaders/GLTFLoader.js"></script>
+
+    <!-- Three.js scene must load after Three.js library -->
+    <script src="threejs-hero.js?v=2025010722"></script>
+
+    <!-- Rest of scripts -->
     <script src="aos-animations.js?v=2025010701"></script>
     <script src="modern-enhancements.js?v=2025010701"></script>
     <script src="analytics.js?v=2025010701"></script>
