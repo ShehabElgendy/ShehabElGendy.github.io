@@ -82,6 +82,18 @@
         // Handle scroll for fade out
         window.addEventListener('scroll', onScroll, false);
 
+        // Enable canvas interaction only on right side of screen (where robot is)
+        document.addEventListener('mousemove', function(e) {
+            const rightSideStart = window.innerWidth * 0.75; // Right 25% of screen only
+            if (e.clientX > rightSideStart) {
+                canvas.style.pointerEvents = 'auto';
+                canvas.style.cursor = 'grab';
+            } else {
+                canvas.style.pointerEvents = 'none';
+                canvas.style.cursor = 'default';
+            }
+        }, false);
+
         // Handle mouse/touch interaction for rotation
         canvas.addEventListener('mousedown', onMouseDown, false);
         canvas.addEventListener('mousemove', onMouseMove, false);
