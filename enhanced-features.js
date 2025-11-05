@@ -322,6 +322,11 @@ function addTestimonialSection() {
             title: "Technical Director at Genesis Creations S.A.E"
         },
         {
+            text: "Shehab has consistently demonstrated exceptional technical expertise, analytical thinking, and a deep commitment to learning. His ability to translate complex technical requirements into efficient, real-world solutions reflects a level of intellectual maturity that is rare among young professionals.",
+            author: "Adam Åström",
+            title: "Chief Executive Officer XR Solutions"
+        },
+        {
             text: "I highly recommend shehab as a skilled 3D Unity developer. He has strong expertise in Unity and game development. His problem-solving skills and technical knowledge are impressive. He quickly adapts to new ideas and implements them effectively. Always reliable and motivated, he adds great value to any team. A solid developer with both creativity and discipline.",
             author: "Mohamed Saeed",
             title: "iOS/Computer Graphics Engineer | The Weather Company | Andela | ex IBM"
