@@ -444,12 +444,10 @@ body.loaded {
     }
 }
 
-/* Hide drag me text on mobile */
+/* Hide drag me text on mobile (along with 3D model) */
 @media (max-width: 768px) {
     .drag-me-text {
-        font-size: 1rem;
-        right: 5%;
-        top: 15%;
+        display: none !important;
     }
 }
 
