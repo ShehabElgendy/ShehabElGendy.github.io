@@ -171,6 +171,14 @@
                 scene.add(model);
                 onWindowResize();
 
+                // Hide loading indicator
+                const loader = document.getElementById('model-loader');
+                if (loader) {
+                    loader.classList.add('hidden');
+                    // Remove from DOM after fade out
+                    setTimeout(() => loader.remove(), 500);
+                }
+
                 console.log('🤖 Robot model loaded successfully!');
             },
             function(xhr) {

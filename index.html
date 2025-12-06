@@ -20,8 +20,10 @@
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjNjRmZmRhIiBkPSJNMzg0IDY0SDMyOFYyNGE4IDggMCAwIDAtOC04SDE5MmE4IDggMCAwIDAtOCA4djQwSDEyOEMzMC42ODggNjQgMCA5NSwwIDE5MnYxMjhjMCA5Ni4zMTMgMzAuNjg4IDEyOCAxMjggMTI4aDI1NmM5Ni4zMTMgMCAxMjgtMzEuNjg4IDEyOC0xMjhWMTkyYzAtOTYuMzEyLTMxLjY4Ny0xMjgtMTI4LTEyOHptLTQ4IDExMmE0OCA0OCAwIDEgMSA0OCA0OSA0OCA0OCAwIDAgMS00OC00OXptLTc1LjUgMTIyaC00OXY0OWEyNC41IDI0LjUgMCAwIDEtNDkgMFYyOThoLTQ5YTI0LjUgMjQuNSAwIDAgMSAwLTQ5aDQ5di00OWEyNC41IDI0LjUgMCAwIDEgNDkgMHY0OWg0OWEyNC41IDI0LjUgMCAwIDEgMCA0OXptMjA3LjUtOTlhNDkgNDkgMCAxIDEgNDktNDkgNDguNTUgNDguNTUgMCAwIDEtNDkgNDl6Ii8+PC9zdmc+">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Preload 3D robot model for faster hero section loading -->
+    <link rel="preload" href="images/robot_playground.glb" as="fetch" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2025010724">
+    <link rel="stylesheet" href="style.css?v=2025120601">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightGallery.js/1.6.12/css/lightgallery.min.css">
 </head>
@@ -63,6 +65,11 @@
         </div>
         <!-- 3D Model Canvas -->
         <canvas id="threejs-canvas"></canvas>
+        <!-- 3D Model Loading Indicator -->
+        <div id="model-loader" class="model-loader">
+            <div class="loader-spinner"></div>
+            <span>Loading 3D Model...</span>
+        </div>
         <!-- Drag Me text for 3D model -->
         <div class="drag-me-text">Drag Me!</div>
         <div class="hero-content">
@@ -367,7 +374,7 @@
     <script src="https://cdn.rawgit.com/mrdoob/three.js/r119/examples/js/loaders/GLTFLoader.js"></script>
 
     <!-- Three.js scene must load after Three.js library -->
-    <script src="threejs-hero.js?v=2025010722"></script>
+    <script src="threejs-hero.js?v=2025120601"></script>
 
     <!-- Rest of scripts -->
     <script src="aos-animations.js?v=2025010701"></script>
