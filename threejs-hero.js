@@ -96,14 +96,13 @@
 
         // Handle mouse/touch interaction for rotation
         canvas.addEventListener('mousedown', onMouseDown, false);
-        canvas.addEventListener('mousemove', onMouseMove, false);
-        canvas.addEventListener('mouseup', onMouseUp, false);
-        canvas.addEventListener('mouseleave', onMouseUp, false);
+        document.addEventListener('mousemove', onMouseMove, false);
+        document.addEventListener('mouseup', onMouseUp, false);
 
         // Touch events for mobile
         canvas.addEventListener('touchstart', onTouchStart, false);
-        canvas.addEventListener('touchmove', onTouchMove, false);
-        canvas.addEventListener('touchend', onTouchEnd, false);
+        document.addEventListener('touchmove', onTouchMove, { passive: false });
+        document.addEventListener('touchend', onTouchEnd, false);
 
         // Start the animation loop
         animate();
