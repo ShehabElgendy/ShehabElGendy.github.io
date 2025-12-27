@@ -388,9 +388,21 @@
         const deltaX = event.movementX !== undefined ? event.movementX : (event.clientX - previousMousePosition.x);
         const deltaY = event.movementY !== undefined ? event.movementY : (event.clientY - previousMousePosition.y);
 
-        // Update target rotation based on mouse movement - full 360 freedom
-        targetRotation.y += deltaX * 0.01;
-        targetRotation.x += deltaY * 0.01;
+        // True trackball rotation - rotate around axis perpendicular to drag
+        const rotationSpeed = 0.005;
+
+        // Create rotation axis perpendicular to mouse movement (in world space)
+        const axis = new THREE.Vector3(-deltaY, deltaX, 0).normalize();
+        const angle = Math.sqrt(deltaX * deltaX + deltaY * deltaY) * rotationSpeed;
+
+        if (angle > 0) {
+            // Create quaternion for this rotation
+            const quaternion = new THREE.Quaternion();
+            quaternion.setFromAxisAngle(axis, angle);
+
+            // Apply rotation to model
+            model.quaternion.premultiply(quaternion);
+        }
 
         previousMousePosition = {
             x: event.clientX,
@@ -425,9 +437,16 @@
         const deltaX = event.touches[0].clientX - previousMousePosition.x;
         const deltaY = event.touches[0].clientY - previousMousePosition.y;
 
-        // Full 360 freedom for touch as well
-        targetRotation.y += deltaX * 0.01;
-        targetRotation.x += deltaY * 0.01;
+        // True trackball rotation for touch
+        const rotationSpeed = 0.005;
+        const axis = new THREE.Vector3(-deltaY, deltaX, 0).normalize();
+        const angle = Math.sqrt(deltaX * deltaX + deltaY * deltaY) * rotationSpeed;
+
+        if (angle > 0 && model) {
+            const quaternion = new THREE.Quaternion();
+            quaternion.setFromAxisAngle(axis, angle);
+            model.quaternion.premultiply(quaternion);
+        }
 
         previousMousePosition = {
             x: event.touches[0].clientX,
@@ -452,22 +471,12 @@
 
         // Rotate the robot
         if (model) {
-            if (isDragging) {
-                // When dragging, directly apply target rotation
-                currentRotation.x = targetRotation.x;
-                currentRotation.y = targetRotation.y;
-            } else {
-                // When not dragging, add slow auto-rotation
-                targetRotation.y += CONFIG.rotationSpeed;
-
-                // Smoothly interpolate to target rotation
-                currentRotation.x += (targetRotation.x - currentRotation.x) * 0.1;
-                currentRotation.y += (targetRotation.y - currentRotation.y) * 0.1;
+            if (!isDragging) {
+                // When not dragging, add slow auto-rotation around Y axis
+                const autoRotation = new THREE.Quaternion();
+                autoRotation.setFromAxisAngle(new THREE.Vector3(0, 1, 0), CONFIG.rotationSpeed);
+                model.quaternion.multiply(autoRotation);
             }
-
-            // Apply rotation to model
-            model.rotation.x = currentRotation.x;
-            model.rotation.y = currentRotation.y;
         }
 
         // Render the scene
