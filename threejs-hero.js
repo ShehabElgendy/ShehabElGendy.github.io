@@ -188,8 +188,12 @@
                 console.log('🤖 Robot model loaded successfully!');
             },
             function(xhr) {
-                const percentComplete = (xhr.loaded / xhr.total) * 100;
-                console.log('Model loading: ' + Math.round(percentComplete) + '%');
+                if (xhr.total > 0) {
+                    const percentComplete = Math.round((xhr.loaded / xhr.total) * 100);
+                    if (percentComplete % 25 === 0) {
+                        console.log('Model loading: ' + percentComplete + '%');
+                    }
+                }
             },
             function(error) {
                 console.error('Error loading robot model:', error);
