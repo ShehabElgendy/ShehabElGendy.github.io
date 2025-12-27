@@ -171,12 +171,18 @@
                 scene.add(model);
                 onWindowResize();
 
-                // Hide loading indicator
+                // Hide loading indicator and show drag me text
                 const loader = document.getElementById('model-loader');
                 if (loader) {
                     loader.classList.add('hidden');
                     // Remove from DOM after fade out
                     setTimeout(() => loader.remove(), 500);
+                }
+
+                // Show drag me text
+                const dragMeText = document.querySelector('.drag-me-text');
+                if (dragMeText) {
+                    dragMeText.classList.add('visible');
                 }
 
                 console.log('🤖 Robot model loaded successfully!');

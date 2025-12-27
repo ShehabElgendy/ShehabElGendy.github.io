@@ -419,17 +419,13 @@ body.loaded {
 /* 3D Model Loading Indicator */
 .model-loader {
     position: absolute;
-    top: 35%;
-    right: 15%;
+    top: 50%;
+    right: 12%;
+    transform: translateY(-50%);
     z-index: 12;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    color: var(--primary-color);
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 1px;
+    justify-content: center;
     opacity: 1;
     transition: opacity 0.5s ease-out;
 }
@@ -476,6 +472,12 @@ body.loaded {
     text-shadow: 0 0 20px rgba(0, 217, 255, 0.8),
                  0 0 40px rgba(0, 217, 255, 0.5);
     animation: dragMePulse 2s ease-in-out infinite;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+
+.drag-me-text.visible {
+    opacity: 1;
 }
 
 @keyframes dragMePulse {

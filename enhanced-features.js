@@ -347,6 +347,9 @@ function addTestimonialSection() {
         <div class="container">
             <h2 class="section-title">Testimonials</h2>
             <div class="testimonial-slider-container">
+                <button class="prev-testimonial" aria-label="Previous testimonial">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
                 <div class="testimonial-slider">
                     <div class="testimonial-track">
                         ${testimonials.map((testimonial, index) => `
@@ -367,20 +370,15 @@ function addTestimonialSection() {
                         `).join('')}
                     </div>
                 </div>
-                <div class="testimonial-navigation">
-                    <button class="prev-testimonial" aria-label="Previous testimonial">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <div class="testimonial-dots">
-                        ${testimonials.map((_, index) => `
-                            <button class="testimonial-dot ${index === 0 ? 'active' : ''}" 
-                                    data-index="${index}" aria-label="Go to testimonial ${index + 1}"></button>
-                        `).join('')}
-                    </div>
-                    <button class="next-testimonial" aria-label="Next testimonial">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
+                <button class="next-testimonial" aria-label="Next testimonial">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="testimonial-dots">
+                ${testimonials.map((_, index) => `
+                    <button class="testimonial-dot ${index === 0 ? 'active' : ''}"
+                            data-index="${index}" aria-label="Go to testimonial ${index + 1}"></button>
+                `).join('')}
             </div>
         </div>
     `;
@@ -407,16 +405,18 @@ function addTestimonialSection() {
             }
             
             .testimonial-slider-container {
-                max-width: 800px;
+                max-width: 900px;
                 margin: 0 auto;
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
+                align-items: center;
+                gap: 15px;
             }
-            
+
             .testimonial-slider {
                 position: relative;
                 overflow: hidden;
-                margin-bottom: 30px;
+                flex: 1;
             }
             
             .testimonial-track {
@@ -481,34 +481,35 @@ function addTestimonialSection() {
                 margin-bottom: 5px;
             }
             
-            .testimonial-navigation {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 10px 0;
-                position: relative;
-            }
-            
             .prev-testimonial,
             .next-testimonial {
-                background: none;
-                border: none;
+                background: rgba(17, 34, 64, 0.8);
+                border: 1px solid rgba(100, 255, 218, 0.3);
+                border-radius: 50%;
                 color: #64ffda;
-                font-size: 20px;
+                font-size: 18px;
                 cursor: pointer;
-                padding: 10px;
-                transition: transform 0.3s ease;
+                width: 45px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                flex-shrink: 0;
             }
-            
+
             .prev-testimonial:hover,
             .next-testimonial:hover {
-                transform: scale(1.2);
+                background: rgba(100, 255, 218, 0.15);
+                border-color: #64ffda;
+                transform: scale(1.1);
             }
-            
+
             .testimonial-dots {
                 display: flex;
                 justify-content: center;
-                margin: 0 20px;
+                margin-top: 25px;
+                gap: 8px;
             }
             
             .testimonial-dot {
@@ -517,7 +518,6 @@ function addTestimonialSection() {
                 border-radius: 50%;
                 background-color: #233554;
                 border: none;
-                margin: 0 5px;
                 padding: 0;
                 cursor: pointer;
                 transition: background-color 0.3s ease, transform 0.3s ease;
@@ -529,26 +529,49 @@ function addTestimonialSection() {
             }
             
             @media (max-width: 768px) {
+                .testimonial-slider-container {
+                    gap: 10px;
+                    padding: 0 5px;
+                }
+
                 .testimonial-content {
-                    padding: 30px 20px;
+                    padding: 25px 15px;
                 }
-                
+
                 .testimonial-text {
-                    font-size: 16px;
+                    font-size: 15px;
                 }
-                
-                .testimonial-slider {
-                    margin-bottom: 20px;
-                }
-                
-                .testimonial-navigation {
-                    padding: 5px 0;
-                }
-                
+
                 .prev-testimonial,
                 .next-testimonial {
-                    font-size: 16px;
-                    padding: 8px;
+                    width: 38px;
+                    height: 38px;
+                    font-size: 14px;
+                }
+
+                .testimonial-dots {
+                    margin-top: 20px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .testimonial-slider-container {
+                    gap: 8px;
+                }
+
+                .prev-testimonial,
+                .next-testimonial {
+                    width: 32px;
+                    height: 32px;
+                    font-size: 12px;
+                }
+
+                .testimonial-content {
+                    padding: 20px 12px;
+                }
+
+                .testimonial-text {
+                    font-size: 14px;
                 }
             }
         `;
