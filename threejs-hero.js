@@ -367,8 +367,12 @@
         }
     }
 
-    // Mouse interaction handlers
+    // Mouse interaction handlers with Pointer Lock for infinite drag
     function onMouseDown(event) {
+        // Request pointer lock for infinite dragging
+        if (canvas.requestPointerLock) {
+            canvas.requestPointerLock();
+        }
         isDragging = true;
         previousMousePosition = {
             x: event.clientX,
@@ -379,8 +383,10 @@
     function onMouseMove(event) {
         if (!isDragging || !model) return;
 
-        const deltaX = event.clientX - previousMousePosition.x;
-        const deltaY = event.clientY - previousMousePosition.y;
+        // Use movementX/Y for pointer lock (infinite movement)
+        // Falls back to regular delta for non-locked state
+        const deltaX = event.movementX !== undefined ? event.movementX : (event.clientX - previousMousePosition.x);
+        const deltaY = event.movementY !== undefined ? event.movementY : (event.clientY - previousMousePosition.y);
 
         // Update target rotation based on mouse movement
         targetRotation.y += deltaX * 0.01;
@@ -397,6 +403,10 @@
 
     function onMouseUp() {
         isDragging = false;
+        // Exit pointer lock when mouse is released
+        if (document.exitPointerLock) {
+            document.exitPointerLock();
+        }
     }
 
     // Touch interaction handlers for mobile
