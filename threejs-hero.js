@@ -388,12 +388,9 @@
         const deltaX = event.movementX !== undefined ? event.movementX : (event.clientX - previousMousePosition.x);
         const deltaY = event.movementY !== undefined ? event.movementY : (event.clientY - previousMousePosition.y);
 
-        // Update target rotation based on mouse movement
+        // Update target rotation based on mouse movement - full 360 freedom
         targetRotation.y += deltaX * 0.01;
         targetRotation.x += deltaY * 0.01;
-
-        // Clamp X rotation to prevent flipping upside down
-        targetRotation.x = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, targetRotation.x));
 
         previousMousePosition = {
             x: event.clientX,
@@ -428,10 +425,9 @@
         const deltaX = event.touches[0].clientX - previousMousePosition.x;
         const deltaY = event.touches[0].clientY - previousMousePosition.y;
 
+        // Full 360 freedom for touch as well
         targetRotation.y += deltaX * 0.01;
         targetRotation.x += deltaY * 0.01;
-
-        targetRotation.x = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, targetRotation.x));
 
         previousMousePosition = {
             x: event.touches[0].clientX,
