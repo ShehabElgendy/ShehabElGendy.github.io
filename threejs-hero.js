@@ -388,21 +388,20 @@
         const deltaX = event.movementX !== undefined ? event.movementX : (event.clientX - previousMousePosition.x);
         const deltaY = event.movementY !== undefined ? event.movementY : (event.clientY - previousMousePosition.y);
 
-        // True trackball rotation - rotate around axis perpendicular to drag
+        // Direct X and Y axis rotations
         const rotationSpeed = 0.005;
 
-        // Create rotation axis perpendicular to mouse movement (in world space)
-        const axis = new THREE.Vector3(deltaY, -deltaX, 0).normalize();
-        const angle = Math.sqrt(deltaX * deltaX + deltaY * deltaY) * rotationSpeed;
+        // Horizontal drag rotates around Y axis
+        const quatY = new THREE.Quaternion();
+        quatY.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -deltaX * rotationSpeed);
 
-        if (angle > 0) {
-            // Create quaternion for this rotation
-            const quaternion = new THREE.Quaternion();
-            quaternion.setFromAxisAngle(axis, angle);
+        // Vertical drag rotates around X axis (drag up = rotate up)
+        const quatX = new THREE.Quaternion();
+        quatX.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -deltaY * rotationSpeed);
 
-            // Apply rotation to model
-            model.quaternion.premultiply(quaternion);
-        }
+        // Apply rotations
+        model.quaternion.premultiply(quatY);
+        model.quaternion.premultiply(quatX);
 
         previousMousePosition = {
             x: event.clientX,
@@ -437,15 +436,21 @@
         const deltaX = event.touches[0].clientX - previousMousePosition.x;
         const deltaY = event.touches[0].clientY - previousMousePosition.y;
 
-        // True trackball rotation for touch
+        // Direct X and Y axis rotations for touch
         const rotationSpeed = 0.005;
-        const axis = new THREE.Vector3(deltaY, -deltaX, 0).normalize();
-        const angle = Math.sqrt(deltaX * deltaX + deltaY * deltaY) * rotationSpeed;
 
-        if (angle > 0 && model) {
-            const quaternion = new THREE.Quaternion();
-            quaternion.setFromAxisAngle(axis, angle);
-            model.quaternion.premultiply(quaternion);
+        if (model) {
+            // Horizontal drag rotates around Y axis
+            const quatY = new THREE.Quaternion();
+            quatY.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -deltaX * rotationSpeed);
+
+            // Vertical drag rotates around X axis (drag up = rotate up)
+            const quatX = new THREE.Quaternion();
+            quatX.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -deltaY * rotationSpeed);
+
+            // Apply rotations
+            model.quaternion.premultiply(quatY);
+            model.quaternion.premultiply(quatX);
         }
 
         previousMousePosition = {
