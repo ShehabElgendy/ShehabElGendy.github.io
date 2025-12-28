@@ -392,7 +392,7 @@
         const rotationSpeed = 0.005;
 
         // Create rotation axis perpendicular to mouse movement (in world space)
-        const axis = new THREE.Vector3(-deltaY, deltaX, 0).normalize();
+        const axis = new THREE.Vector3(deltaY, -deltaX, 0).normalize();
         const angle = Math.sqrt(deltaX * deltaX + deltaY * deltaY) * rotationSpeed;
 
         if (angle > 0) {
@@ -439,7 +439,7 @@
 
         // True trackball rotation for touch
         const rotationSpeed = 0.005;
-        const axis = new THREE.Vector3(-deltaY, deltaX, 0).normalize();
+        const axis = new THREE.Vector3(deltaY, -deltaX, 0).normalize();
         const angle = Math.sqrt(deltaX * deltaX + deltaY * deltaY) * rotationSpeed;
 
         if (angle > 0 && model) {
