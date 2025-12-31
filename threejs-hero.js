@@ -27,6 +27,23 @@
         rotationSpeed: 0.005       // FASTER rotation!
     };
 
+    // Energy Mini-Game Configuration
+    const ENERGY_CONFIG = {
+        maxEnergy: 100,
+        decayRate: 8,              // % per second when idle
+        chargeMultiplier: 800,     // velocity to energy conversion
+        minVelocityThreshold: 0.0005,
+        explosionParticles: 80,
+        explosionDuration: 2000
+    };
+
+    // Energy Game State
+    let energyLevel = 0;
+    let lastQuaternion = null;
+    let rotationVelocity = 0;
+    let explosionParticles = null;
+    let isExploding = false;
+
     // Initialize the Three.js scene
     function init() {
         if (!canvas) {
@@ -463,6 +480,136 @@
         isDragging = false;
     }
 
+    // === ENERGY MINI-GAME SYSTEM ===
+
+    // Calculate rotation velocity from quaternion delta
+    function calculateRotationVelocity() {
+        if (!model || !lastQuaternion) {
+            if (model) {
+                lastQuaternion = model.quaternion.clone();
+            }
+            return 0;
+        }
+
+        // Calculate angular difference between current and last quaternion
+        const currentQuat = model.quaternion;
+        const dotProduct = lastQuaternion.dot(currentQuat);
+        const angle = 2 * Math.acos(Math.min(Math.abs(dotProduct), 1));
+
+        // Store current quaternion for next frame
+        lastQuaternion = currentQuat.clone();
+
+        return angle;
+    }
+
+    // Update energy based on game state
+    function updateEnergy(delta) {
+        if (isExploding) return;
+
+        const velocity = calculateRotationVelocity();
+
+        if (isDragging && velocity > ENERGY_CONFIG.minVelocityThreshold) {
+            // Charging - faster spin = more energy
+            const chargeAmount = velocity * ENERGY_CONFIG.chargeMultiplier * delta;
+            energyLevel = Math.min(energyLevel + chargeAmount, ENERGY_CONFIG.maxEnergy);
+        } else {
+            // Decay when not spinning
+            energyLevel = Math.max(energyLevel - ENERGY_CONFIG.decayRate * delta, 0);
+        }
+
+        // Check for full charge
+        if (energyLevel >= ENERGY_CONFIG.maxEnergy) {
+            triggerExplosion();
+        }
+    }
+
+    // Trigger particle explosion when fully charged
+    function triggerExplosion() {
+        if (isExploding || !model) return;
+        isExploding = true;
+
+        // Create particle system
+        const particleCount = ENERGY_CONFIG.explosionParticles;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const velocities = [];
+
+        // Get model position for explosion center
+        const center = new THREE.Vector3();
+        model.getWorldPosition(center);
+
+        // Initialize particles at model center with random velocities
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = center.x;
+            positions[i * 3 + 1] = center.y;
+            positions[i * 3 + 2] = center.z;
+
+            // Random outward velocity
+            velocities.push(new THREE.Vector3(
+                (Math.random() - 0.5) * 8,
+                (Math.random() - 0.5) * 8,
+                (Math.random() - 0.5) * 8
+            ));
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        const material = new THREE.PointsMaterial({
+            color: 0x00d9ff,
+            size: 0.15,
+            transparent: true,
+            opacity: 1,
+            blending: THREE.AdditiveBlending
+        });
+
+        explosionParticles = new THREE.Points(geometry, material);
+        explosionParticles.userData.velocities = velocities;
+        explosionParticles.userData.life = 0;
+        scene.add(explosionParticles);
+
+        // Reset energy after explosion
+        energyLevel = 0;
+
+        // Clean up after animation
+        setTimeout(() => {
+            if (explosionParticles) {
+                scene.remove(explosionParticles);
+                explosionParticles.geometry.dispose();
+                explosionParticles.material.dispose();
+                explosionParticles = null;
+            }
+            isExploding = false;
+        }, ENERGY_CONFIG.explosionDuration);
+
+        console.log('💥 Energy explosion triggered!');
+    }
+
+    // Animate explosion particles
+    function updateExplosionParticles(delta) {
+        if (!explosionParticles) return;
+
+        const positions = explosionParticles.geometry.attributes.position.array;
+        const velocities = explosionParticles.userData.velocities;
+
+        explosionParticles.userData.life += delta;
+        const lifeRatio = explosionParticles.userData.life / (ENERGY_CONFIG.explosionDuration / 1000);
+
+        // Update particle positions
+        for (let i = 0; i < velocities.length; i++) {
+            positions[i * 3] += velocities[i].x * delta;
+            positions[i * 3 + 1] += velocities[i].y * delta;
+            positions[i * 3 + 2] += velocities[i].z * delta;
+
+            // Apply gravity
+            velocities[i].y -= 3 * delta;
+        }
+
+        explosionParticles.geometry.attributes.position.needsUpdate = true;
+
+        // Fade out
+        explosionParticles.material.opacity = 1 - lifeRatio;
+    }
+
     // Animation loop (runs every frame)
     function animate() {
         requestAnimationFrame(animate);
@@ -482,7 +629,13 @@
                 autoRotation.setFromAxisAngle(new THREE.Vector3(0, 1, 0), CONFIG.rotationSpeed);
                 model.quaternion.multiply(autoRotation);
             }
+
+            // Update energy mini-game
+            updateEnergy(delta);
         }
+
+        // Update explosion particles
+        updateExplosionParticles(delta);
 
         // Render the scene
         renderer.render(scene, camera);
