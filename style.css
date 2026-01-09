@@ -931,6 +931,16 @@ body.loaded {
     transform: scale(1.03);
 }
 
+/* Portrait image styling - show full image with matching background */
+.portfolio-item.portrait-card .video-thumbnail {
+    background: #1a1a2e; /* Match the image's dark purple background */
+}
+
+.portfolio-item.portrait-card .video-thumbnail img {
+    object-fit: contain; /* Show FULL image, no cropping */
+    background: #1a1a2e;
+}
+
 .view-project, .portfolio-link {
     background: transparent;
     color: var(--primary-color);
