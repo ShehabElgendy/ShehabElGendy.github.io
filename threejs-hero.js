@@ -408,13 +408,13 @@
         // Direct X and Y axis rotations
         const rotationSpeed = 0.005;
 
-        // Horizontal drag rotates around Y axis
+        // Horizontal drag rotates around Y axis (drag right = rotate right)
         const quatY = new THREE.Quaternion();
-        quatY.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -deltaX * rotationSpeed);
+        quatY.setFromAxisAngle(new THREE.Vector3(0, 1, 0), deltaX * rotationSpeed);
 
         // Vertical drag rotates around X axis (drag up = rotate up)
         const quatX = new THREE.Quaternion();
-        quatX.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -deltaY * rotationSpeed);
+        quatX.setFromAxisAngle(new THREE.Vector3(1, 0, 0), deltaY * rotationSpeed);
 
         // Apply rotations
         model.quaternion.premultiply(quatY);
@@ -457,13 +457,13 @@
         const rotationSpeed = 0.005;
 
         if (model) {
-            // Horizontal drag rotates around Y axis
+            // Horizontal drag rotates around Y axis (drag right = rotate right)
             const quatY = new THREE.Quaternion();
-            quatY.setFromAxisAngle(new THREE.Vector3(0, 1, 0), -deltaX * rotationSpeed);
+            quatY.setFromAxisAngle(new THREE.Vector3(0, 1, 0), deltaX * rotationSpeed);
 
             // Vertical drag rotates around X axis (drag up = rotate up)
             const quatX = new THREE.Quaternion();
-            quatX.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -deltaY * rotationSpeed);
+            quatX.setFromAxisAngle(new THREE.Vector3(1, 0, 0), deltaY * rotationSpeed);
 
             // Apply rotations
             model.quaternion.premultiply(quatY);
