@@ -594,14 +594,48 @@ body.loaded {
     50% { background-position: 100% 50%; }
 }
 
+/* Typed subtitle in hero */
+.hero-typed-wrapper {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    color: var(--primary-color);
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    min-height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+#typed-output {
+    display: inline;
+}
+
+.typed-cursor {
+    display: inline-block;
+    color: var(--primary-color);
+    font-weight: 300;
+    animation: blink-cursor 0.75s step-end infinite;
+}
+
+@keyframes blink-cursor {
+    from, to { opacity: 1; }
+    50% { opacity: 0; }
+}
+
 .hero-description {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     margin-bottom: 3rem;
     color: var(--text-secondary);
     max-width: 650px;
     margin-left: auto;
     margin-right: auto;
     line-height: 1.7;
+}
+
+/* Magnetic button effect */
+.magnetic-btn {
+    transition: transform 0.2s ease-out, box-shadow 0.3s ease, background 0.3s ease;
 }
 
 .hero-buttons {
