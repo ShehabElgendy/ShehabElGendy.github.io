@@ -975,6 +975,87 @@ body.loaded {
     background: #1a1a2e;
 }
 
+/* Portfolio Highlights - Full width with glowing border */
+.portfolio-item.highlights-card {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.2), 0 0 30px rgba(0, 217, 255, 0.1);
+    animation: highlightGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes highlightGlow {
+    0% {
+        box-shadow: 0 0 15px rgba(0, 217, 255, 0.2), 0 0 30px rgba(0, 217, 255, 0.1);
+        border-color: var(--primary-color);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.25), 0 0 40px rgba(139, 92, 246, 0.1);
+        border-color: var(--secondary-color);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(0, 217, 255, 0.2), 0 0 30px rgba(0, 217, 255, 0.1);
+        border-color: var(--primary-color);
+    }
+}
+
+.portfolio-item.highlights-card .video-thumbnail {
+    height: 100%;
+    padding-bottom: 0;
+    min-height: 250px;
+}
+
+.portfolio-item.highlights-card .video-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.portfolio-item.highlights-card .video-description h4 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.portfolio-item.highlights-card .video-description p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+/* Featured new project badge */
+.portfolio-item.featured-new {
+    border: 2px solid var(--accent-color);
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+    position: relative;
+}
+
+.portfolio-item.featured-new:hover {
+    box-shadow: 0 25px 50px rgba(245, 158, 11, 0.2), 0 0 0 1px rgba(245, 158, 11, 0.3);
+    border-color: var(--accent-color);
+}
+
+.new-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--accent-color);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 4px;
+    z-index: 3;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+
 .view-project, .portfolio-link {
     background: transparent;
     color: var(--primary-color);
@@ -1397,7 +1478,15 @@ section h2.fade-in-visible {
     .skills-grid {
         grid-template-columns: 1fr;
     }
-    
+
+    .portfolio-item.highlights-card {
+        grid-template-columns: 1fr;
+    }
+
+    .portfolio-item.highlights-card .video-thumbnail {
+        min-height: 200px;
+    }
+
     .technologies-grid {
         grid-template-columns: 1fr;
         gap: 0.5rem;
