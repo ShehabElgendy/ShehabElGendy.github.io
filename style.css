@@ -975,6 +975,20 @@ body.loaded {
     background: #1a1a2e;
 }
 
+/* Logo card styling - keep full logo visible with padding */
+.portfolio-item.logo-card .video-thumbnail {
+    background-image: url('images/bg-farm.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.portfolio-item.logo-card .video-thumbnail img {
+    object-fit: contain;
+    padding: 1.25rem;
+    box-sizing: border-box;
+}
+
 /* Portfolio Highlights - Full width with glowing border */
 .portfolio-item.highlights-card {
     grid-column: 1 / -1;
