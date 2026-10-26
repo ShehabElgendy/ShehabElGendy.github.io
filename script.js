@@ -168,7 +168,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            // Only reach here for non-Google Drive videos or other embeds
+            const isLocalVideo = /\.(mp4|webm)(\?|#|$)/i.test(videoUrl);
+            const playerMarkup = isLocalVideo
+                ? `<video src="${videoUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;" controls autoplay playsinline></video>`
+                : `<iframe src="${videoUrl}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+
             // Create the modal with the video
             const videoModal = document.createElement('div');
             videoModal.className = 'video-modal';
@@ -190,13 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <i class="fas fa-times" style="color: #0a192f;"></i>
                     </button>
                     <div class="video-container" style="padding-top: 56.25%; position: relative;">
-                        <iframe 
-                            src="${videoUrl}" 
-                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen
-                        ></iframe>
+                        ${playerMarkup}
                     </div>
                 </div>
             `;
