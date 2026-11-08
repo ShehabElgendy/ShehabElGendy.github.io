@@ -610,11 +610,23 @@
         explosionParticles.material.opacity = 1 - lifeRatio;
     }
 
+    // Skip simulation and rendering while the hero is off screen
+    let isHeroVisible = true;
+    if (canvas && 'IntersectionObserver' in window) {
+        new IntersectionObserver(function(entries) {
+            isHeroVisible = entries[0].isIntersecting;
+        }).observe(canvas);
+    }
+
     // Animation loop (runs every frame)
     function animate() {
         requestAnimationFrame(animate);
 
         const delta = clock.getDelta();
+
+        if (!isHeroVisible) {
+            return;
+        }
 
         // Update model animations if they exist
         if (mixer) {
