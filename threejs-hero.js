@@ -13,6 +13,9 @@
     let previousMousePosition = { x: 0, y: 0 };
     let targetRotation = { x: 0, y: 0 };
     let currentRotation = { x: 0, y: 0 };
+    let modelRadius = 0;
+    let modelRestX = 0;
+    let modelRestScale = 1;
 
     // Configuration
     const CONFIG = {
@@ -24,7 +27,12 @@
             z: 0
         },
         cameraDistance: 6,
-        rotationSpeed: 0.005       // FASTER rotation!
+        rotationSpeed: 0.005,      // FASTER rotation!
+        cameraFov: 60,
+        heroTextHalfWidthPx: 380,  // Keep the robot clear of the centered hero text
+        edgeMargin: 0.2,           // World units between the robot and the screen edge
+        animatedReach: 1.3,        // Animated parts swing past the bind pose bounds
+        minFitScale: 0.4           // Never shrink below this on narrow windows
     };
 
     // Energy Mini-Game Configuration
@@ -59,7 +67,7 @@
 
         // Create the camera (your viewpoint into the scene)
         const aspect = window.innerWidth / window.innerHeight;
-        camera = new THREE.PerspectiveCamera(60, aspect, 0.1, 1000);  // Wide FOV to see cow on edge
+        camera = new THREE.PerspectiveCamera(CONFIG.cameraFov, aspect, 0.1, 1000);  // Wide FOV to see cow on edge
         camera.position.set(0, 0, CONFIG.cameraDistance);
         camera.lookAt(0, 0, 0);  // Look at center
 
@@ -184,6 +192,12 @@
                     });
                 }
 
+                // Horizontal reach from the pivot, so the fit holds at any rotation
+                modelRadius = Math.max(
+                    Math.abs(box.min.x), Math.abs(box.max.x),
+                    Math.abs(box.min.z), Math.abs(box.max.z)
+                );
+
                 scene.add(model);
                 onWindowResize();
 
@@ -307,12 +321,12 @@
 
         // Position the model
         model.position.set(
-            CONFIG.modelPosition.x,
+            modelRestX,
             CONFIG.modelPosition.y,
             CONFIG.modelPosition.z
         );
 
-        model.scale.set(CONFIG.modelScale, CONFIG.modelScale, CONFIG.modelScale);
+        model.scale.set(modelRestScale, modelRestScale, modelRestScale);
 
         // Add to scene
         scene.add(model);
@@ -339,7 +353,7 @@
 
         model = new THREE.Mesh(geometry, material);
         model.position.set(
-            CONFIG.modelPosition.x,
+            modelRestX,
             CONFIG.modelPosition.y,
             CONFIG.modelPosition.z
         );
@@ -363,24 +377,21 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Don't change scale on resize - keep aspect ratio consistent
-        // Only adjust X position for different screen sizes
+        // Fit the robot between the hero text and the right edge of the screen
         if (model) {
-            const baseScale = CONFIG.modelScale;
+            const halfWidth = Math.tan(THREE.MathUtils.degToRad(CONFIG.cameraFov / 2)) * CONFIG.cameraDistance * camera.aspect;
+            const textHalfWidth = halfWidth * CONFIG.heroTextHalfWidthPx / (window.innerWidth / 2);
+            const availableWidth = halfWidth - textHalfWidth - CONFIG.edgeMargin;
+            const fitScale = Math.max(CONFIG.minFitScale, availableWidth / (2 * modelRadius));
 
-            if (window.innerWidth < 768) {
-                // Mobile: move closer to center, same scale
-                model.position.x = CONFIG.modelPosition.x - 1.5;
-                model.scale.set(baseScale * 0.6, baseScale * 0.6, baseScale * 0.6);
-            } else if (window.innerWidth < 1200) {
-                // Tablet: medium position
-                model.position.x = CONFIG.modelPosition.x - 1;
-                model.scale.set(baseScale * 0.8, baseScale * 0.8, baseScale * 0.8);
-            } else {
-                // Desktop: full size on right edge
-                model.position.x = CONFIG.modelPosition.x;
-                model.scale.set(baseScale, baseScale, baseScale);
-            }
+            modelRestScale = CONFIG.modelScale * Math.min(1, fitScale);
+            modelRestX = Math.min(
+                CONFIG.modelPosition.x,
+                halfWidth - CONFIG.edgeMargin - modelRadius * CONFIG.animatedReach * modelRestScale
+            );
+
+            model.position.x = modelRestX;
+            model.scale.set(modelRestScale, modelRestScale, modelRestScale);
         }
     }
 
@@ -656,6 +667,11 @@
     // Wait for THREE.js library and GLTFLoader to load, then start
     let waitCount = 0;
     function startWhenReady() {
+        // The canvas is hidden on mobile, so skip the model download and WebGL setup
+        if (window.matchMedia('(max-width: 768px)').matches) {
+            return;
+        }
+
         waitCount++;
 
         // Check if THREE is loaded

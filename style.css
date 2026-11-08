@@ -1840,10 +1840,10 @@ footer {
 }
 
 /* Ensuring content appears above particles */
-.navbar, .hero-content, .portfolio-grid, .skills-grid, 
+.hero-content, .portfolio-grid, .skills-grid, 
 .contact-content, footer, .section-title, .container h2,
 .portfolio-item, .skill-category, .contact-form, .social-links,
-.logo, .nav-links {
+.logo {
     position: relative;
     z-index: 2;
 }
@@ -1856,4 +1856,33 @@ footer {
 /* Ensure video modal appears above particles */
 .video-modal {
     z-index: 1000 !important;
+}
+
+/* Touch screens have no hover, so keep project actions visible */
+@media (hover: none) {
+    .play-overlay {
+        opacity: 1;
+        pointer-events: auto;
+        align-items: flex-end;
+        padding-bottom: 0.75rem;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent 60%);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .view-project,
+    .portfolio-link {
+        opacity: 1;
+        transform: none;
+        padding: 0.5rem 0.9rem;
+        font-size: 0.8rem;
+        background: rgba(10, 25, 47, 0.8);
+    }
+}
+
+/* Keep the hamburger inside the fixed mobile navbar */
+@media (max-width: 768px) {
+    .nav-content {
+        min-height: 44px;
+    }
 }
